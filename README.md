@@ -1,4 +1,4 @@
-# cloud-openapi-ui
+# public-cloud-openapi-ui
 
 This repo is used to generate a github page linking to cloud [openapi-contracts](https://github.com/hivemq-cloud/hivemq-cloud/tree/develop/libs/openapi-contracts) as a tool to follow a contract first approach enabling parallel coding.
 
