@@ -6,5 +6,5 @@ This repo is used to generate a github page linking to cloud [openapi-contracts]
 
 ## Github page
 
-The site is live at https://crispy-adventure-k6kw9lq.pages.github.io/
+The site is live at https://hivemq-cloud.github.io/public-cloud-openapi-ui/
 
