@@ -6,7 +6,7 @@ info:
   contact:
     email: support@hivemq.com
   license:
-    name: TBD - Do we have any licence?
+    name: TBD - Do we have any license?
   version: 1.0.11
 externalDocs:
   description: HiveMQ documentation
@@ -18,6 +18,74 @@ tags:
       description: Find out more
       url: http://hivemq.com
 paths:
+
+  /api/v1/orgs/{orgId}/clusters/{clusterId}/rbac/mqtt/permissions:
+    post:
+      tags:
+        - Cluster
+      summary: Create a new permission to assign to MQTT users
+      operationId: createMqttPermission
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MQTTPermission"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MQTTPermissionResponse"
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
+
+  /api/v1/orgs/{orgId}/clusters/{clusterId}/rbac/mqtt/roles:
+    post:
+      tags:
+        - Cluster
+      summary: Create a new role to assign to MQTT users
+      operationId: createMqttRole
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MQTTRole"
+      responses:
+        204:
+          description: Role successfully created
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
+
   /api/v1/orgs/{orgId}/cluster/{clusterId}/public/clientCert:
     put:
       tags:
@@ -54,8 +122,56 @@ paths:
           description: Not enough permissions (forbidden)
         404:
           description: cluster not found on the provided organization
-security:
-  - bearerAuth: [ ]
+
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/credentials/mqtt:
+    post:
+      tags:
+        - Cluster
+      summary: Create Cluster mqtt credentials
+      description: Create Cluster mqtt credentials
+      operationId: createMQTTCredentials
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          description: Cluster ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: New Cluster requirements
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MQTTCredentialsCreation'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+        '400':
+          description: Invalid input
+        '403':
+          description: Forbidden action
+        '410':
+          description: Username already in use
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV2'
+        '404':
+          description: Organisation or role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseV2'
+
+#security:
+#  - bearerAuth: [ ]
 components:
   securitySchemes:
     bearerAuth:
@@ -107,3 +223,104 @@ components:
           description: Base64 encoded client certificate pem key
           example: |
             LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURIekNDQWdlZ0F3SUJBZ0lVWEU3Vll6UGFGS0tYQ0pFTjZ2TG1HbTdpNlVNd0RRWUpLb1pJaHZjTkFRRUwKQlFBd0h6RWRNQnNHQTFVRUF3d1VZMjl1YzI5c1pTNW9hWFpsYlhFdVkyeHZkV1F3SGhjTk1qTXdPRE14TVRjMApPRFV3V2hjTk1qUXdPREkxTVRjME9EVXdXakFmTVIwd0d3WURWUVFEREJSamIyNXpiMnhsTG1ocGRtVnRjUzVqCmJHOTFaRENDQVNJd0RRWUpLb1pJaHZjTkFRRUJCUUFEZ2dFUEFEQ0NBUW9DZ2dFQkFNTkhEZ2hHSVg0L3hKSHoKQVpVNWRwVHphMnk0SjdXSEFtYms3R25GQU9EVkpRMGdjckhpTUNoeG5vTWRkQXFlT2ErZkxBMlJtUkxORGRDcQpYenA2dXlqYmpjRDNXK1BFT1JnVnp2YXRMV3h3SnFORXlRK25GMXRQcWlzVTQ2UjRnUnlSMHU3KzJkOE1nVUorCjF0eWlsRGhjenQxTmxIbU1qRXBOYUpRVjlCc28wRklvRTBZUmpYWklqUG92RWNiekxtYmYxUDFQY1R4c052cXEKYnk4czhUd2UzSVk0MytRbnlCQWxCYmJiN2QyUFdXYzBXRmJtNnk1M05mUmtPUnFOVjhhYlRjeE9teGlwaFV2NgphT21QdGlqeS9CWTY3ZUNHOWxOdC8xOTJUdC85dE1oaGQ0R2lDa0F2NkoyQ1NqRnFJczFtQ2RPS01DNlVMTnQ1ClBldG9nck1DQXdFQUFhTlRNRkV3SFFZRFZSME9CQllFRkh6RVVlbTFPQ2xqN2QxZFJVVTZWU3JxTEtOSU1COEcKQTFVZEl3UVlNQmFBRkh6RVVlbTFPQ2xqN2QxZFJVVTZWU3JxTEtOSU1BOEdBMVVkRXdFQi93UUZNQU1CQWY4dwpEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBQ1lNMnR3bUc5QTZxQ3Z5Z2dRUXZuSTJDeVhvUzFLRzJXZHJoR1pnCkw1ZkhpS1h2WlJMRXF5cGQvQllzMG5kMzZnYWwrVXF1a29mZmVRc2FxOUxKeHZ3YW5vVlgwaWlsQjJsKys4eHkKS3IxYktxYzJ5Vm9rZTl5anliTVRxMXZUdVhuSUN2SmFoYUVFbmVic2ZYV0tieGlZaEZldDFvRFQxTnpOMDRlMwpXQkFYWk9vcEFtVGZXSzlsVUo5UklkdDVZOXFrUTYwaGJLd0x1SnNRZ1hBb2plbzJuMEVTL3MrUUo3cS8xVkJFCk9DSkQ0SThoUVNqM2tJaTBYb3hhKzZiNEdUaEp5U0VmUXE1YXZSR0UxZm5TeWZ2OGNyZjJaa3Q3L0N3SWRZZnIKa29ScWZ5ZlN1MitWMnl0SGRHZVE2L1hEdU16NWNBV1pFM2llWHA0Tzh3c1NMb289Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+
+    MQTTPermission:
+      type: "object"
+      description: a single MQTT permission, to be assigned to a role
+      required:
+        - name
+        - description
+        - topic
+        - publish_allowed
+        - subscribe_allowed
+        - qos_0_allowed
+        - qos_1_allowed
+        - qos_2_allowed
+        - retained_msgs_allowed
+        - shared_sub_allowed
+        - shared_group
+      properties:
+        name:
+          type: "string"
+        description:
+          type: "string"
+        topic:
+          type: "string"
+        publish_allowed:
+          type: "boolean"
+        subscribe_allowed:
+          type: "boolean"
+        qos_0_allowed:
+          type: "boolean"
+        qos_1_allowed:
+          type: "boolean"
+        qos_2_allowed:
+          type: "boolean"
+        retained_msgs_allowed:
+          type: "boolean"
+        shared_sub_allowed:
+          type: "boolean"
+        shared_group:
+          type: "string"
+
+    MQTTPermissionResponse:
+      type: "object"
+      description: MQTT permission object along its ID in the DB which is used to assign permissions to roles
+      properties:
+        id:
+          type: "integer"
+        permission:
+          $ref: '#/components/schemas/MQTTPermission'
+    Organisation:
+      type: object
+      properties:
+        org_id:
+          type: string
+        org_name:
+          type: string
+
+    MQTTRole:
+      type: object
+      description: a role to be used for granting an MQTT user a set of permissions
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        permissions:
+          description: list of permission IDs mapped to the role. see MQTTPermission
+          type: array
+          items:
+            type: integer
+
+    MQTTCredentialsCreation:
+      type: object
+      required:
+        - password
+        - username
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        roles:
+          type: array
+          minItems: 1
+          uniqueItems: true
+          items:
+            type: string
+          description: Names of the roles to assign to the user
+
+    ErrorResponseV2:
+      description: specific or unspecific error
+      type: object
+      required:
+        - code
+        - description
+      properties:
+        code:
+          type: string
+          description: machine-readable error code
+        description:
+          type: string
+          description: human-readable error description, with optional context
