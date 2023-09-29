@@ -53,8 +53,8 @@ paths:
                 404:
                     description: Either Org, hiveId or username do not exist
 
-#security:
-#  - bearerAuth: [ ]
+security:
+  - bearerAuth: [ ]
 components:
     securitySchemes:
         bearerAuth:
