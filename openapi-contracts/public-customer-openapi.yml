@@ -121,6 +121,76 @@ paths:
         404:
           description: Account, cluster, org, etc. does not exist
 
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/rbac/mqtt/permissions/{permissionId}:
+    put:
+      tags:
+        - MQTT Credentials
+      summary: Update permission
+      operationId: updateMqttPermission
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MQTTPermission"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MQTTPermissionResponse"
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
+    delete:
+      tags:
+        - MQTT Credentials
+      summary: Delete permission
+      operationId: deleteMqttPermission
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: Successfully deleted
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
+
 security:
   - bearerAuth: [ ]
 components:
