@@ -1,86 +1,201 @@
 openapi: 3.0.3
 info:
-    title: HiveMQ Apiary Public API 1.0
-    description: |-
-        TBD
-    contact:
-        email: support@hivemq.com
-    license:
-        name: TBD - Do we have any license?
-    version: 1.0.11
+  title: HiveMQ Apiary Public API 1.0
+  description: |-
+    TBD
+  contact:
+    email: support@hivemq.com
+  license:
+    name: TBD - Do we have any license?
+  version: 1.0.11
 externalDocs:
-    description: HiveMQ documentation
-    url: http://hivemq.com
+  description: HiveMQ documentation
+  url: http://hivemq.com
 tags:
-    - name: MQTT Credentials
-      description: Manage MQTT credentials
-      externalDocs:
-          description: Find out more
-          url: http://hivemq.com
+  - name: MQTT Credentials
+    description: Manage MQTT credentials
+    externalDocs:
+      description: Find out more
+      url: http://hivemq.com
 paths:
-    /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/credentials/username/{username}:
-        get:
-            tags:
-                - MQTT Credentials
-            summary: Get MQTT credentials by username
-            operationId: getCredentials
-            parameters:
-                - name: orgId
-                  in: path
-                  description: Organisation ID
-                  required: true
-                  schema:
-                      type: string
-                - name: hiveId
-                  in: path
-                  required: true
-                  schema:
-                      type: string
-                - name: username
-                  in: path
-                  required: true
-                  schema:
-                      type: string
-            responses:
-                200:
-                    description: successful operation
-                    content:
-                        application/json:
-                            schema:
-                                $ref: "#/components/schemas/CredentialsListResponse"
-                400:
-                    description: Missing parameter or otherwise incorrect request
-                404:
-                    description: Either Org, hiveId or username do not exist
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/credentials/username/{username}:
+    get:
+      tags:
+        - MQTT Credentials
+      summary: Get MQTT credentials by username
+      operationId: getCredentials
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CredentialsListResponse"
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Either Org, hiveId or username do not exist
+
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/rbac/mqtt/permissions:
+    get:
+      tags:
+        - MQTT Credentials
+      summary: List all valid permissions for MQTT users in a selected cluster.
+      operationId: listMqttPermissions
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List all valid permissions for the given cluster.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MQTTPermissionResponse'
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
+    post:
+      tags:
+        - MQTT Credentials
+      summary: Create a new permission to assign to MQTT users
+      operationId: createMqttPermission
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MQTTPermission"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MQTTPermissionResponse"
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
 
 security:
   - bearerAuth: [ ]
 components:
-    securitySchemes:
-        bearerAuth:
-            type: http
-            scheme: bearer
-            bearerFormat: JWT
-    schemas:
-        CredentialsListResponse:
-            type: object
-            properties:
-                credentials:
-                    type: array
-                    items:
-                        $ref: '#/components/schemas/CredentialsResponse'
-        UserInfo:
-            type: object
-            properties:
-                username:
-                    type: string
-                role:
-                    type: array
-                    items:
-                        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    CredentialsListResponse:
+      type: object
+      properties:
+        credentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/CredentialsResponse'
+    UserInfo:
+      type: object
+      properties:
+        username:
+          type: string
+        role:
+          type: array
+          items:
+            type: string
 
-        CredentialsResponse:
-            type: object
-            properties:
-                UserInfo:
-                    $ref: '#/components/schemas/UserInfo'
+    CredentialsResponse:
+      type: object
+      properties:
+        UserInfo:
+          $ref: '#/components/schemas/UserInfo'
+
+    MQTTPermission:
+      type: object
+      description: a single MQTT permission, to be assigned to a role
+      required:
+        - name
+        - description
+        - topic
+        - publishAllowed
+        - subscribeAllowed
+        - qos0Allowed
+        - qos1Allowed
+        - qos2Allowed
+        - retainedMsgsAllowed
+        - sharedSubAllowed
+        - sharedGroup
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        topic:
+          type: string
+        publishAllowed:
+          type: boolean
+        subscribeAllowed:
+          type: boolean
+        qos0Allowed:
+          type: boolean
+        qos1Allowed:
+          type: boolean
+        qos2Allowed:
+          type: boolean
+        retainedMsgsAllowed:
+          type: boolean
+        sharedSubAllowed:
+          type: boolean
+        sharedGroup:
+          type: string
+    MQTTPermissionResponse:
+      type: object
+      description: MQTT permission object along its ID in the DB which is used to assign permissions to roles
+      required:
+        - permissionInfo
+      properties:
+        permissionInfo:
+          $ref: '#/components/schemas/MQTTPermission'
