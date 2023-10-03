@@ -17,6 +17,11 @@ tags:
     externalDocs:
       description: Find out more
       url: http://hivemq.com
+  - name: MQTT Permissions
+    description: Manage MQTT permissions
+    externalDocs:
+      description: Find out more
+      url: http://hivemq.com
 paths:
   /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/credentials/username/{username}:
     get:
@@ -56,7 +61,7 @@ paths:
   /api/v2/orgs/{orgId}/clusters/{hiveId}/rbac/mqtt/permissions:
     get:
       tags:
-        - MQTT Credentials
+        - MQTT Permissions
       summary: List all valid permissions for MQTT users in a selected cluster.
       operationId: listMqttPermissions
       parameters:
@@ -88,7 +93,7 @@ paths:
             response.
     post:
       tags:
-        - MQTT Credentials
+        - MQTT Permissions
       summary: Create a new permission to assign to MQTT users
       operationId: createMqttPermission
       parameters:
@@ -122,48 +127,9 @@ paths:
           description: Account, cluster, org, etc. does not exist
 
   /api/v2/orgs/{orgId}/clusters/{hiveId}/rbac/mqtt/permissions/{permissionId}:
-    put:
-      tags:
-        - MQTT Credentials
-      summary: Update permission
-      operationId: updateMqttPermission
-      parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: hiveId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: permissionId
-          in: path
-          required: true
-          schema:
-            type: integer
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/MQTTPermission"
-      responses:
-        200:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/MQTTPermissionResponse"
-        400:
-          description: Missing parameter or otherwise incorrect request
-        404:
-          description: Account, cluster, org, etc. does not exist
     delete:
       tags:
-        - MQTT Credentials
+        - MQTT Permissions
       summary: Delete permission
       operationId: deleteMqttPermission
       parameters:
