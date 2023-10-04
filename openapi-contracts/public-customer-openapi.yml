@@ -259,6 +259,40 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
+    post:
+      tags:
+        - MQTT Roles
+      summary: Create a new role for MQTT credentials
+      operationId: createMqttRoles
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertRoleRequest"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RoleInfo"
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
 
 security:
   - bearerAuth: [ ]
@@ -272,15 +306,27 @@ components:
     RolesListResponse:
       type: object
       properties:
-        credentials:
+        roles:
           type: array
           items:
             $ref: '#/components/schemas/RoleResponse'
     RoleResponse:
       type: object
       properties:
-        credentials:
+        roleInfo:
           $ref: '#/components/schemas/RoleInfo'
+    UpsertRoleRequest:
+      type: object
+      properties:
+        role:
+          $ref: '#/components/schemas/Role'
+    Role:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
     UpsertCredentialsRequest:
       type: object
       properties:
