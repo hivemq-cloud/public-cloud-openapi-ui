@@ -323,6 +323,44 @@ paths:
           description: Missing parameter or otherwise incorrect request
         404:
           description: Either orgId, cluster, org or roleName. does not exist
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/roles/{roleName}/permissions:
+    get:
+      tags:
+        - MQTT Roles
+      summary: List all valid roles for MQTT users in a selected cluster.
+      operationId: listRolePermissions
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List role permissions for the given cluster.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RolePermissionsListResponse'
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
 
 security:
   - bearerAuth: [ ]
@@ -457,3 +495,22 @@ components:
       properties:
         permissionInfo:
           $ref: '#/components/schemas/MQTTPermission'
+
+    RolePermissionResponse:
+      type: object
+      properties:
+        roleName:
+          type: string
+        roleId:
+          type: integer
+          format: int64
+        permissionId:
+          type: integer
+          format: int64
+    RolePermissionsListResponse:
+      type: object
+      properties:
+        rolePermissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/RolePermissionResponse'
