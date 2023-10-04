@@ -177,7 +177,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MQTTPermission"
+              $ref: "#/components/schemas/UpsertPermissionRequest"
       responses:
         200:
           description: successful operation
@@ -233,12 +233,8 @@ components:
     UpsertCredentialsRequest:
       type: object
       properties:
-        hiveId:
-          type: string
         credentials:
-          type: array
-          items:
-            $ref: '#/components/schemas/Credentials'
+          $ref: '#/components/schemas/Credentials'
     CredentialsListResponse:
       type: object
       properties:
@@ -271,6 +267,12 @@ components:
       properties:
         UserInfo:
           $ref: '#/components/schemas/UserInfo'
+
+    UpsertPermissionRequest:
+      type: object
+      properties:
+        permission:
+          $ref: '#/components/schemas/MQTTPermission'
 
     MQTTPermission:
       type: object
