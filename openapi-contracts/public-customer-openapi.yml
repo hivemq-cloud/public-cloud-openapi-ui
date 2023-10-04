@@ -22,6 +22,11 @@ tags:
     externalDocs:
       description: Find out more
       url: http://hivemq.com
+  - name: MQTT Roles
+    description: Manage MQTT Roles
+    externalDocs:
+      description: Find out more
+      url: http://hivemq.com
 paths:
   /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/credentials:
     post:
@@ -122,7 +127,7 @@ paths:
         404:
           description: Account, cluster, org, etc. does not exist
 
-  /api/v2/orgs/{orgId}/clusters/{hiveId}/rbac/mqtt/permissions:
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/permissions:
     get:
       tags:
         - MQTT Permissions
@@ -190,7 +195,7 @@ paths:
         404:
           description: Account, cluster, org, etc. does not exist
 
-  /api/v2/orgs/{orgId}/clusters/{hiveId}/rbac/mqtt/permissions/{permissionId}:
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/permissions/{permissionId}:
     delete:
       tags:
         - MQTT Permissions
@@ -221,6 +226,40 @@ paths:
         404:
           description: Account, cluster, org, etc. does not exist
 
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/roles:
+    get:
+      tags:
+        - MQTT Roles
+      summary: List all valid roles for MQTT users in a selected cluster.
+      operationId: listMqttRoles
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List all valid roles for the given cluster.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RolesListResponse'
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
+
 security:
   - bearerAuth: [ ]
 components:
@@ -230,6 +269,18 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    RolesListResponse:
+      type: object
+      properties:
+        credentials:
+          type: array
+          items:
+            $ref: '#/components/schemas/RoleResponse'
+    RoleResponse:
+      type: object
+      properties:
+        credentials:
+          $ref: '#/components/schemas/RoleInfo'
     UpsertCredentialsRequest:
       type: object
       properties:
@@ -242,6 +293,16 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CredentialsResponse'
+    RoleInfo:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        id:
+          type: integer
+          format: int64
     UserInfo:
       type: object
       properties:
