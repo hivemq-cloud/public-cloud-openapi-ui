@@ -293,6 +293,36 @@ paths:
           description: Missing parameter or otherwise incorrect request
         404:
           description: Account, cluster, org, etc. does not exist
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/roles/{roleName}:
+    delete:
+      tags:
+        - MQTT Roles
+      summary: Delete role
+      operationId: deleteMqttRole
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Successfully deleted
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Either orgId, cluster, org or roleName. does not exist
 
 security:
   - bearerAuth: [ ]
