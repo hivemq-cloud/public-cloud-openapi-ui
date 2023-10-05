@@ -27,6 +27,11 @@ tags:
     externalDocs:
       description: Find out more
       url: http://hivemq.com
+  - name: User - Roles
+    description: User - Roles Management
+    externalDocs:
+      description: Find out more
+      url: http://hivemq.com
 paths:
   /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/credentials:
     post:
@@ -435,6 +440,44 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/user/{userName}/roles:
+    get:
+      tags:
+        - User - Roles
+      summary: List all roles by user
+      operationId: listUserRoles
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List users / roles.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRolesListResponse'
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
 
 security:
   - bearerAuth: [ ]
@@ -588,3 +631,17 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/RolePermissionResponse'
+    UserRolesListResponse:
+      type: object
+      properties:
+        userRole:
+          type: array
+          items:
+            $ref: '#/components/schemas/UserRoleResponse'
+    UserRoleResponse:
+      type: object
+      properties:
+        roles:
+          type: array
+          items:
+            type: string
