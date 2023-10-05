@@ -361,6 +361,80 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/roles/{roleId}/permissions/{permissionId}/attach:
+    put:
+      tags:
+        - MQTT Roles
+      summary: Attach permission to role
+      operationId: attachRolePermission
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Attached permission to role for the given cluster.
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/roles/{roleId}/permissions/{permissionId}/detach:
+    put:
+      tags:
+        - MQTT Roles
+      summary: Detach permission to role
+      operationId: detachRolePermission
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: permissionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Detached permission to role for the given cluster.
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
 
 security:
   - bearerAuth: [ ]
