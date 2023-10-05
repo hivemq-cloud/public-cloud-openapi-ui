@@ -200,7 +200,7 @@ paths:
         404:
           description: Account, cluster, org, etc. does not exist
 
-  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/permissions/{permissionId}:
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/mqtt/permissions/{id}:
     delete:
       tags:
         - MQTT Permissions
@@ -218,7 +218,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: permissionId
+        - name: id
           in: path
           required: true
           schema:
