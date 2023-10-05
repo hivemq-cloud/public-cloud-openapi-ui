@@ -515,6 +515,43 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
+  /api/v2/orgs/{orgId}/clusters/{hiveId}/user/{userName}/roles/{roleName}/attach:
+    put:
+      tags:
+        - User - Roles
+      summary: attach user role
+      operationId: attachUserRole
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: hiveId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: role attached successfully.
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
 
 security:
   - bearerAuth: [ ]
