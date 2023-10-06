@@ -407,7 +407,7 @@ paths:
     put:
       tags:
         - MQTT Roles
-      summary: Detach permission to role
+      summary: Detach permission from role
       operationId: detachRolePermission
       parameters:
         - name: orgId
@@ -433,7 +433,7 @@ paths:
             type: string
       responses:
         200:
-          description: Detached permission to role for the given cluster.
+          description: Detached permission from role for the given cluster.
         404:
           description: If no cluster is found for the current user return a not found
             response.
