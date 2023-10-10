@@ -655,8 +655,6 @@ components:
         - qos1Allowed
         - qos2Allowed
         - retainedMsgsAllowed
-        - sharedSubAllowed
-        - sharedGroup
       properties:
         name:
           type: string
