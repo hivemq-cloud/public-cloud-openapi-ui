@@ -624,10 +624,6 @@ components:
           type: string
         password:
           type: string
-        role:
-          type: array
-          items:
-            type: string
     CredentialsResponse:
       type: object
       properties:
