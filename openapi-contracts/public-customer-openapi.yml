@@ -485,7 +485,7 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleName}/detach:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleId}/detach:
     put:
       tags:
         - User - Roles
@@ -508,8 +508,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: roleName
+        - name: roleId
           in: path
+          description: Role ID
           required: true
           schema:
             type: string
@@ -522,7 +523,7 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleName}/attach:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleId}/attach:
     put:
       tags:
         - User - Roles
@@ -545,8 +546,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: roleName
+        - name: roleId
           in: path
+          description: Role ID
           required: true
           schema:
             type: string
