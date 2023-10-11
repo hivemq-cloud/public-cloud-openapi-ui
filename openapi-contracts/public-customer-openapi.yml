@@ -304,7 +304,7 @@ paths:
           description: Missing parameter or otherwise incorrect request
         404:
           description: Account, cluster, org, etc. does not exist
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleName}:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}:
     delete:
       tags:
         - MQTT Roles
@@ -322,8 +322,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: roleName
+        - name: roleId
           in: path
+          description: Role ID
           required: true
           schema:
             type: string
