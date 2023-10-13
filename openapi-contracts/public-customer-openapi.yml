@@ -335,7 +335,7 @@ paths:
           description: Missing parameter or otherwise incorrect request
         404:
           description: Either orgId, cluster, org or roleName. does not exist
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleName}/permissions:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/permissions:
     get:
       tags:
         - MQTT Roles
@@ -349,11 +349,6 @@ paths:
           schema:
             type: string
         - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: roleName
           in: path
           required: true
           schema:
