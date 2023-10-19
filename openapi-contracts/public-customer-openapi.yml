@@ -6,17 +6,15 @@ servers:
       baseUrl:
         default: api.apigwuri.notset
 info:
-  title: HiveMQ Apiary Public API 1.0
+  title: HiveMQ Cloud Public REST API 1.0
   description: |-
-    TBD
+    HiveMQ Cloud offers REST APIs designed to seamlessly extend your MQTT workflows programmatically. These APIs enable users to perform a variety of actions related to client credential management and access control
   contact:
     email: support@hivemq.com
-  license:
-    name: TBD - Do we have any license?
-  version: 1.0.11
+  version: 1.0.0
 externalDocs:
-  description: HiveMQ documentation
-  url: http://hivemq.com
+  description: HiveMQ Cloud documentation
+  url: https://docs.hivemq.com/hivemq-cloud/introduction
 tags:
   - name: MQTT Credentials
     description: Manage MQTT credentials
