@@ -77,7 +77,7 @@ paths:
       tags:
         - MQTT Credentials
       summary: Get MQTT credentials by username
-      operationId: getCredentials
+      operationId: getMqttCredentials
       parameters:
         - name: orgId
           in: path
@@ -338,7 +338,7 @@ paths:
       tags:
         - MQTT Roles
       summary: List all valid roles for MQTT users in a selected cluster.
-      operationId: listRolePermissions
+      operationId: listMqttRolePermissions
       parameters:
         - name: orgId
           in: path
@@ -371,7 +371,7 @@ paths:
       tags:
         - MQTT Roles
       summary: Attach permission to role
-      operationId: attachRolePermission
+      operationId: attachMqttRolePermission
       parameters:
         - name: orgId
           in: path
@@ -408,7 +408,7 @@ paths:
       tags:
         - MQTT Roles
       summary: Detach permission from role
-      operationId: detachRolePermission
+      operationId: detachMqttRolePermission
       parameters:
         - name: orgId
           in: path
@@ -445,7 +445,7 @@ paths:
       tags:
         - User - Roles
       summary: List all roles by user
-      operationId: listUserRoles
+      operationId: listMqttCredentialRoles
       parameters:
         - name: orgId
           in: path
@@ -483,7 +483,7 @@ paths:
       tags:
         - User - Roles
       summary: detach user role
-      operationId: detachUserRole
+      operationId: detachMqttCredentialRole
       parameters:
         - name: orgId
           in: path
@@ -521,7 +521,7 @@ paths:
       tags:
         - User - Roles
       summary: attach user role
-      operationId: attachUserRole
+      operationId: attachMqttCredentialRole
       parameters:
         - name: orgId
           in: path
