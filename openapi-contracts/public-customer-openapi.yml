@@ -6,9 +6,21 @@ servers:
       baseUrl:
         default: api.apigwuri.notset
 info:
-  title: HiveMQ Cloud Public REST API 1.0
-  description: |-
-    HiveMQ Cloud offers REST APIs designed to seamlessly extend your MQTT workflows programmatically. These APIs enable users to perform a variety of actions related to client credential management and access control
+  title: HiveMQ Cloud Public REST API
+  x-logo:
+    url: https://www.hivemq.com/img/svg/hivemq-bee.svg
+  description: |2
+
+    # Introduction
+
+    HiveMQ Cloud offers REST APIs designed to seamlessly extend your MQTT workflows programmatically.
+    These APIs enable users to perform a variety of actions related to client credential management and access control.
+
+    HiveMQ's Cloud REST API provides endpoints for the following use cases:
+    - Listing all MQTT Credentials
+    - Listing all roles and permissions
+    - Assign and un-assign permissions to roles
+    - Assign and un-assign user to roles
   contact:
     email: support@hivemq.com
   version: 1.0.0

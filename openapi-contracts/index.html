@@ -1,13 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
-  <META HTTP-EQUIV="EXPIRES" CONTENT="Mon, 22 Jul 2002 11:12:01 GMT">
-  <title>Swagger Index</title>
+  <title>HiveMQ Cloud V1 REST API documentation</title>
+  <!-- needed for adaptive design -->
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700|Roboto:300,400,700" rel="stylesheet">
+
+  <!--
+  ReDoc doesn't change outer page styles
+  -->
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+  </style>
 </head>
 <body>
-  <h2>OpenAPIs</h2>
-  <p><a href="../openapi/index-ui.html?url=../openapi-contracts/public-customer-openapi.yml">Public Customer v1</a></p>
+<redoc spec-url="public-customer-openapi.yml"
+       json-sample-expand-level="3" hide-hostname="true" expand-responses="200,201" expand-single-schema-field="true"
+></redoc>
+<script src="https://cdn.jsdelivr.net/npm/redoc@next/bundles/redoc.standalone.js"></script>
 </body>
 </html>
