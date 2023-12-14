@@ -21,6 +21,7 @@ info:
     - Listing all roles and permissions
     - Assign and un-assign permissions to roles
     - Assign and un-assign user to roles
+
   contact:
     email: support@hivemq.com
   version: 1.0.0
@@ -566,7 +567,6 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
-
 security:
   - bearerAuth: [ ]
 components:
@@ -694,7 +694,6 @@ components:
       properties:
         permissionInfo:
           $ref: '#/components/schemas/MQTTPermission'
-
     RolePermissionResponse:
       type: object
       properties:
