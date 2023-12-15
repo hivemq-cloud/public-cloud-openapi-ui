@@ -27,6 +27,44 @@ info:
     - Getting the connection status for a specific MQTT client
     - Creating and restoring a backup
 
+        # Streaming events API
+    Stream API is exposed as a websocket in which URI is built on top of this base path `/orgs/{orgId}/clusters/{clusterId}/`,
+    where clusterId is the cluster unique identifier amd orgId is the organisation identifier which the cluster belongs to.
+
+    Download the [Async API definition](public-enterpise-asyncapi.yml)
+
+     ## Streaming Authorization
+     It is mandatory to send the Api Key as an Authorization header with a bearerAuth format, similar to the REST API.
+
+     ## Streaming content type
+     All incoming and outgoing events uses `application/json` as body.
+
+     ## Streaming Logs tails
+     `ws://{HOST}}:{}PORT/orgs/1/clusters/1/stream/logs/tail?delay_for=5&limit=50`
+     After the base path described above, `stream/logs/tail` will stream log events.
+
+      delay_for: The number of seconds to delay retrieving logs to let slow loggers catch up. Defaults to 0 and cannot be larger than 5.
+
+      limit: The max number of entries to return. It defaults to 100.
+
+      start: The start time for the query as a nanosecond Unix epoch. Defaults to one hour ago.
+
+         ### Response Example
+         ```
+            {"streams": [{
+                      "stream": {
+                                    <label key-value pairs>
+                      },
+                      "values": [
+                          [
+                              <string: nanosecond unix epoch>,
+                              <string: log line>
+                          ]
+                      ]
+                  }
+              ]}
+         ```
+
   contact:
     email: support@hivemq.com
   version: 1.0.0
@@ -572,7 +610,7 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
-  /api/v1/management/backups:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/backups:
     get:
       description: |-
         Lists all available backups with their current state.
@@ -583,6 +621,18 @@ paths:
 
         This endpoint requires at least HiveMQ version 4.4.0. on all cluster nodes.
       operationId: getAllBackups
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -637,6 +687,18 @@ paths:
 
         This endpoint requires at least HiveMQ version 4.4.0. on all cluster nodes.
       operationId: createBackup
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -671,7 +733,7 @@ paths:
       summary: Create a new backup
       tags:
         - Backup & Restore
-  /api/v1/management/backups/{backupId}:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/backups/{backupId}:
     get:
       description: |-
         Returns the information for a specific backup with its current state.
@@ -686,6 +748,17 @@ paths:
         - description: The id of the backup.
           in: path
           name: backupId
+          required: true
+          schema:
+            type: string
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
           required: true
           schema:
             type: string
@@ -765,6 +838,17 @@ paths:
           required: true
           schema:
             type: string
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -827,10 +911,22 @@ paths:
       summary: Restore a new backup
       tags:
         - Backup & Restore
-  /api/v1/management/diagnostic-archives:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/diagnostic-archives:
     post:
       description: Triggers the creation of a new diagnostic archive.
       operationId: createDiagnosticArchive
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -851,7 +947,7 @@ paths:
       summary: Create a new diagnostic archive
       tags:
         - Diagnostic Archive
-  /api/v1/management/files/backups/{backupId}:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/files/backups/{backupId}:
     get:
       description: "Download a specific backup file. \n\n This endpoint returns the\
         \ content of the backup file with the content-type `application/octet-stream`.\
@@ -863,6 +959,17 @@ paths:
         - description: The id of the backup.
           in: path
           name: backupId
+          required: true
+          schema:
+            type: string
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
           required: true
           schema:
             type: string
@@ -925,7 +1032,7 @@ paths:
       summary: Download a backup file
       tags:
         - Backup & Restore
-  /api/v1/mqtt/clients:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/clients:
     get:
       description: |-
         Lists all client sessions (online and offline) known to the whole HiveMQ cluster.
@@ -949,6 +1056,17 @@ paths:
             Do not pass this parameter if you want to fetch the first page.
           in: query
           name: cursor
+          schema:
+            type: string
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
           schema:
             type: string
       responses:
@@ -1041,7 +1159,7 @@ paths:
       summary: List all MQTT clients
       tags:
         - MQTT Clients
-  /api/v1/mqtt/clients/{clientId}:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/clients/{clientId}:
     delete:
       description: |-
         Invalidates the client session for a client with the given client identifier. If the client is currently connected, it will be disconnected as well.
@@ -1061,6 +1179,17 @@ paths:
           schema:
             type: boolean
             default: false
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           content:
@@ -1108,6 +1237,17 @@ paths:
         - description: The MQTT client identifier.
           in: path
           name: clientId
+          required: true
+          schema:
+            type: string
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
           required: true
           schema:
             type: string
@@ -1227,7 +1367,7 @@ paths:
       summary: Get detailed client information
       tags:
         - MQTT Clients
-  /api/v1/mqtt/clients/{clientId}/connection:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/clients/{clientId}/connection:
     delete:
       description: |-
         Disconnects a specific client if its is currently connected.
@@ -1247,6 +1387,17 @@ paths:
           schema:
             type: boolean
             default: false
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           content:
@@ -1297,6 +1448,17 @@ paths:
           required: true
           schema:
             type: string
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "200":
           content:
@@ -1342,7 +1504,7 @@ paths:
       summary: Get a clients connection state
       tags:
         - MQTT Clients
-  /api/v1/mqtt/clients/{clientId}/subscriptions:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/clients/{clientId}/subscriptions:
     get:
       description: |-
         List all subscriptions for a specific client.
@@ -1353,6 +1515,17 @@ paths:
         - description: The MQTT client identifier.
           in: path
           name: clientId
+          required: true
+          schema:
+            type: string
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
           required: true
           schema:
             type: string

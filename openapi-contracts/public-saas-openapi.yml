@@ -22,6 +22,41 @@ info:
     - Assign and un-assign permissions to roles
     - Assign and un-assign user to roles
 
+    # Streaming events API
+    Stream API is exposed as a websocket in which URI is built on top of this base path `/orgs/{orgId}/clusters/{clusterId}/`,
+    where clusterId is the cluster unique identifier amd orgId is the organisation identifier which the cluster belongs to.
+
+    Download the [Async API definition](public-saas-asyncapi.yml)
+
+     ## Streaming Authorization
+     It is mandatory to send the Api Key as an Authorization header with a bearerAuth format, similar to the REST API.
+
+     ## Streaming Logs tails
+     `ws://{HOST}}:{}PORT/orgs/1/clusters/1/stream/logs/tail?delay_for=5&limit=50`
+     After the base path described above, `stream/logs/tail` will stream log events.
+
+    delay_for: The number of seconds to delay retrieving logs to let slow loggers catch up. Defaults to 0 and cannot be larger than 5.
+
+    limit: The max number of entries to return. It defaults to 100.
+
+    start: The start time for the query as a nanosecond Unix epoch. Defaults to one hour ago.
+
+    ### Response Example
+     ```
+        {"streams": [{
+                  "stream": {
+                                <label key-value pairs>
+                  },
+                  "values": [
+                      [
+                          <string: nanosecond unix epoch>,
+                          <string: log line>
+                      ]
+                  ]
+              }
+          ]}
+     ```
+
   contact:
     email: support@hivemq.com
   version: 1.0.0
