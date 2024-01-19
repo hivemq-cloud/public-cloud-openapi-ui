@@ -25,9 +25,8 @@ info:
     - Getting detailed information about a specific MQTT client
     - Listing all subscriptions for a specific MQTT client
     - Getting the connection status for a specific MQTT client
-    - Creating and restoring a backup
 
-        # Streaming events API
+    # Streaming events API
     Stream API is exposed as a websocket in which URI is built on top of this base path `/orgs/{orgId}/clusters/{clusterId}/`,
     where clusterId is the cluster unique identifier amd orgId is the organisation identifier which the cluster belongs to.
 
@@ -39,7 +38,7 @@ info:
      ## Streaming content type
      All incoming and outgoing events uses `application/json` as body.
 
-     ## Streaming Logs tails
+     ## Streaming Logs tail
      `ws://{HOST}}:{}PORT/orgs/1/clusters/1/stream/logs/tail?delay_for=5&limit=50`
      After the base path described above, `stream/logs/tail` will stream log events.
 
@@ -261,6 +260,45 @@ paths:
           description: Account, cluster, org, etc. does not exist
 
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/permissions/{id}:
+    put:
+      tags:
+        - MQTT Permissions
+      summary: Update permission
+      operationId: updateMqttPermission
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertPermissionRequest"
+      responses:
+        200:
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MQTTPermissionResponse"
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
     delete:
       tags:
         - MQTT Permissions
@@ -610,428 +648,6 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/backups:
-    get:
-      description: |-
-        Lists all available backups with their current state.
-
-        This endpoint can be used to get an overview over all backups that are in progress or can be restored.
-
-        Canceled or failed backups are included in the results for up to 1 hour after they have been requested.
-
-        This endpoint requires at least HiveMQ version 4.4.0. on all cluster nodes.
-      operationId: getAllBackups
-      parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                empty-results:
-                  description: Empty result if no backups are known.
-                  summary: Empty result if no backups are known
-                  value:
-                    items: []
-                multiple-results:
-                  description: Example response with one stored backup and one backup
-                    that is currently in progress.
-                  summary: Multiple results in different states
-                  value:
-                    items:
-                      - id: 20200506-081317
-                        createdAt: 2020-05-06T08:13:17Z
-                        bytes: 85550653
-                        state: COMPLETED
-                      - id: 20201006-1902318
-                        createdAt: 2020-05-06T08:13:17Z
-                        state: IN_PROGRESS
-                      - id: 20201006-1902318
-                        createdAt: 2020-05-06T08:13:17Z
-                        state: FAILED
-                        failReason: Another backup is already in progress.
-              schema:
-                $ref: '#/components/schemas/BackupList'
-          description: Success
-        "503":
-          content:
-            application/json:
-              examples:
-                temporarily-not-available:
-                  description: The endpoint is temporarily not available
-                  summary: Temporarily not available
-                  value:
-                    errors:
-                      - title: The endpoint is temporarily not available
-                        detail: "The endpoint is temporarily not available, please try\
-                        \ again later"
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Temporarily not available
-      summary: List all available backups
-      tags:
-        - Backup & Restore
-    post:
-      description: |-
-        Triggers the creation of a new backup.
-
-        This endpoint requires at least HiveMQ version 4.4.0. on all cluster nodes.
-      operationId: createBackup
-      parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                example:
-                  description: Example response with in-progress backup.
-                  summary: Created backup that is currently in progress
-                  value:
-                    backup:
-                      id: 20201006-1902318
-                      createdAt: 2020-05-06T08:13:17Z
-                      state: IN_PROGRESS
-              schema:
-                $ref: '#/components/schemas/BackupItem'
-          description: Success
-        "503":
-          content:
-            application/json:
-              examples:
-                temporarily-not-available:
-                  description: The endpoint is temporarily not available
-                  summary: Temporarily not available
-                  value:
-                    errors:
-                      - title: The endpoint is temporarily not available
-                        detail: "The endpoint is temporarily not available, please try\
-                        \ again later"
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Temporarily not available
-      summary: Create a new backup
-      tags:
-        - Backup & Restore
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/backups/{backupId}:
-    get:
-      description: |-
-        Returns the information for a specific backup with its current state.
-
-         This endpoint can be used to check the progress of a specific backup when it is being created or being restored.
-
-          Canceled or failed backups are returned for up to 1 hour after the have been requested.
-
-         This endpoint requires at least HiveMQ version 4.4.0. on all cluster nodes.
-      operationId: getBackup
-      parameters:
-        - description: The id of the backup.
-          in: path
-          name: backupId
-          required: true
-          schema:
-            type: string
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                get-example:
-                  description: Example response.
-                  summary: Example with a completed backup
-                  value:
-                    backup:
-                      id: 20200506-081317
-                      createdAt: 2020-05-06T08:13:17Z
-                      bytes: 85550653
-                      state: COMPLETED
-              schema:
-                $ref: '#/components/schemas/BackupItem'
-          description: Success
-        "400":
-          content:
-            application/json:
-              examples:
-                param-missing:
-                  description: Bad request
-                  summary: Required URL parameter missing
-                  value:
-                    errors:
-                      - title: Required parameter missing
-                        detail: Required URL parameter 'parameterName' is missing
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Bad request
-        "404":
-          content:
-            application/json:
-              examples:
-                not-found:
-                  description: Not found
-                  summary: Not found
-                  value:
-                    errors:
-                      - title: Resource not found
-                        detail: Resource with id 'my-resource-id' not found
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Resource not found
-        "503":
-          content:
-            application/json:
-              examples:
-                temporarily-not-available:
-                  description: The endpoint is temporarily not available
-                  summary: Temporarily not available
-                  value:
-                    errors:
-                      - title: The endpoint is temporarily not available
-                        detail: "The endpoint is temporarily not available, please try\
-                        \ again later"
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Temporarily not available
-      summary: Get backup information
-      tags:
-        - Backup & Restore
-    post:
-      description: |-
-        Triggers the restore of a stored backup.
-
-        This endpoint requires at least HiveMQ version 4.4.0. on all cluster nodes.
-      operationId: restoreBackup
-      parameters:
-        - description: The id of the backup.
-          in: path
-          name: backupId
-          required: true
-          schema:
-            type: string
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                example:
-                  description: Example response.
-                  summary: Created backup that is currently in progress
-                  value:
-                    backup:
-                      id: 20201006-1902318
-                      createdAt: 2020-05-06T08:13:17Z
-                      state: IN_PROGRESS
-              schema:
-                $ref: '#/components/schemas/BackupItem'
-          description: Success
-        "400":
-          content:
-            application/json:
-              examples:
-                param-missing:
-                  description: Bad request
-                  summary: Required URL parameter missing
-                  value:
-                    errors:
-                      - title: Required parameter missing
-                        detail: Required URL parameter 'parameterName' is missing
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Bad request
-        "404":
-          content:
-            application/json:
-              examples:
-                not-found:
-                  description: Example not found
-                  summary: Not found
-                  value:
-                    errors:
-                      - title: Resource not found
-                        detail: Resource with id 'my-resource-id' not found
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Resource not found
-        "503":
-          content:
-            application/json:
-              examples:
-                temporarily-not-available:
-                  description: The endpoint is temporarily not available
-                  summary: Temporarily not available
-                  value:
-                    errors:
-                      - title: The endpoint is temporarily not available
-                        detail: "The endpoint is temporarily not available, please try\
-                        \ again later"
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Temporarily not available
-      summary: Restore a new backup
-      tags:
-        - Backup & Restore
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/diagnostic-archives:
-    post:
-      description: Triggers the creation of a new diagnostic archive.
-      operationId: createDiagnosticArchive
-      parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              examples:
-                example:
-                  description: Example response with in-progress diagnostic archive
-                    creation.
-                  summary: Creation of a diagnostic archive that is currently in progress
-                  value:
-                    diagnosticArchive:
-                      id: 20230201-192318
-                      createdAt: 2023-01-02T08:13:17Z
-                      state: IN_PROGRESS
-              schema:
-                $ref: '#/components/schemas/DiagnosticArchiveItem'
-          description: Success
-      summary: Create a new diagnostic archive
-      tags:
-        - Diagnostic Archive
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/management/files/backups/{backupId}:
-    get:
-      description: "Download a specific backup file. \n\n This endpoint returns the\
-        \ content of the backup file with the content-type `application/octet-stream`.\
-        \ \n\n Only backups in the states `COMPLETED`, `RESTORE_IN_PROGRESS`, `RESTORE_FAILED`\
-        \ or `RESTORE_COMPLETED` can be downloaded.\n\n This endpoint requires at\
-        \ least HiveMQ version 4.4.0. on all cluster nodes."
-      operationId: downloadBackupFile
-      parameters:
-        - description: The id of the backup.
-          in: path
-          name: backupId
-          required: true
-          schema:
-            type: string
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          content:
-            application/octet-stream:
-              examples:
-                file-download:
-                  description: File download
-                  summary: File download
-                  value: <raw data>
-              schema:
-                type: string
-                format: binary
-          description: Success
-        "400":
-          content:
-            application/json:
-              examples:
-                param-missing:
-                  description: Bad request
-                  summary: Required URL parameter missing
-                  value:
-                    errors:
-                      - title: Required parameter missing
-                        detail: Required URL parameter 'parameterName' is missing
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Bad request
-        "404":
-          content:
-            application/json:
-              examples:
-                not-found:
-                  description: Resource not found
-                  summary: Not found
-                  value:
-                    errors:
-                      - title: Resource not found
-                        detail: Resource with id 'my-resource-id' not found
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Resource not found
-        "503":
-          content:
-            application/json:
-              examples:
-                temporarily-not-available:
-                  description: The endpoint is temporarily not available
-                  summary: Temporarily not available
-                  value:
-                    errors:
-                      - title: The endpoint is temporarily not available
-                        detail: "The endpoint is temporarily not available, please try\
-                        \ again later"
-              schema:
-                $ref: '#/components/schemas/Errors'
-          description: Temporarily not available
-      summary: Download a backup file
-      tags:
-        - Backup & Restore
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/clients:
     get:
       description: |-
@@ -1756,49 +1372,6 @@ components:
           type: array
           items:
             type: string
-    Backup:
-      type: object
-      properties:
-        bytes:
-          type: integer
-          format: int64
-          description: The size of this backup file in bytes.
-          nullable: true
-        createdAt:
-          type: string
-          format: date-time
-          description: Time the backup was created at
-        failReason:
-          type: string
-          description: "The reason why this backup failed, only present for failed\
-            \ backups."
-          nullable: true
-        id:
-          type: string
-          description: The id of this backup
-        state:
-          type: string
-          description: The current state of the backup
-          enum:
-            - COMPLETED
-            - RESTORE_COMPLETED
-            - IN_PROGRESS
-            - RESTORE_IN_PROGRESS
-            - FAILED
-            - RESTORE_FAILED
-    BackupItem:
-      type: object
-      properties:
-        backup:
-          $ref: '#/components/schemas/Backup'
-    BackupList:
-      type: object
-      properties:
-        items:
-          type: array
-          description: List of result items that are returned by this endpoint
-          items:
-            $ref: '#/components/schemas/Backup'
     Error:
       type: object
       properties:
@@ -1815,38 +1388,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Error'
-    DiagnosticArchive:
-      type: object
-      properties:
-        bytes:
-          type: integer
-          format: int64
-          description: The size of this diagnostic archive file in bytes.
-          nullable: true
-        createdAt:
-          type: string
-          format: date-time
-          description: Time the diagnostic archive was created at.
-        failReason:
-          type: string
-          description: "The reason why this diagnostic archive failed, only present\
-            \ for failed diagnostic archives."
-          nullable: true
-        id:
-          type: string
-          description: The id of this diagnostic archive.
-        state:
-          type: string
-          description: The current state of the diagnostic archive.
-          enum:
-            - COMPLETED
-            - IN_PROGRESS
-            - FAILED
-    DiagnosticArchiveItem:
-      type: object
-      properties:
-        diagnosticArchive:
-          $ref: '#/components/schemas/DiagnosticArchive'
     Client:
       type: object
       description: List of result items that are returned by this endpoint
