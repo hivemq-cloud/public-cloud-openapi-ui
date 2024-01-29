@@ -359,6 +359,36 @@ paths:
         404:
           description: Account, cluster, org, etc. does not exist
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}:
+    put:
+      tags:
+        - MQTT Roles
+      summary: update a specific role
+      operationId: updateRole
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MQTTRole"
+      responses:
+        204:
+          description: successfully updated
     delete:
       tags:
         - MQTT Roles
@@ -1301,7 +1331,19 @@ components:
       properties:
         permissionInfo:
           $ref: '#/components/schemas/MQTTPermission'
-
+    MQTTRole:
+      type: object
+      description: a role to be used for granting an MQTT user a set of permissions
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        permissions:
+          description: list of permission IDs mapped to the role. see MQTTPermission
+          type: array
+          items:
+            type: integer
     RolePermissionResponse:
       type: object
       properties:
