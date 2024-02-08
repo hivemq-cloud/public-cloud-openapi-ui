@@ -53,6 +53,11 @@ tags:
     externalDocs:
       description: Find out more
       url: http://hivemq.com
+  - name: Clients Authentication
+    description: clients authentication
+    externalDocs:
+      description: Find out more
+      url: http://hivemq.com
 paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/credentials:
     post:
@@ -1204,6 +1209,178 @@ paths:
       summary: List all subscriptions for MQTT client
       tags:
         - MQTT Clients
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/clients-auth/certificate:
+    get:
+      tags:
+        - clients authentication
+      summary: Get Client Certificate
+      description: Get Client Certificate
+      operationId: getClientCertificate
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: getClientCertificate 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientCertificate'
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
+    delete:
+      tags:
+        - clients authentication
+      summary: Delete Client Certificate
+      description: Delete Client Certificate
+      operationId: deleteClientCertificate
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: successful operation
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
+    put:
+      tags:
+        - clients authentication
+      summary: Put Client Certificate
+      description: Put Client Certificate
+      operationId: putClientCertificate
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: New client certificate
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPublicKey'
+        required: true
+      responses:
+        '200':
+          description: putClientCertificate 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientCertificate'
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/clients-auth/jwt:
+    get:
+      tags:
+        - clients authentication
+      summary: Get Client JWT Config
+      description: Get Client JWT Config
+      operationId: getClientJWTAuthConfig
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: getClientJWTAuthConfig 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JWTAuthConfigResponse'
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
+    delete:
+      tags:
+        - clients authentication
+      summary: Remove JWT Config to use ESE basic credentials
+      description: Delete JWT Config to use ESE username & password
+      operationId: deleteClientJWTAuthConfig
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: successful operation
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
+    put:
+      tags:
+        - clients authentication
+      summary: Upsert JWT Config to use JWTs to auth clients
+      description: Upsert JWT Config to use JWTs to auth clients
+      operationId: putClientJWTAuthConfig
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: New JWT Config for clients authentication
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutJWTAuthConfig'
+        required: true
+      responses:
+        '200':
+          description: successful operation
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
 security:
   - bearerAuth: [ ]
 components:
@@ -1652,3 +1829,157 @@ components:
           type: string
           description: Certificate version
           nullable: true
+    ClientCertificate:
+      required:
+        - clientCert
+      type: object
+      properties:
+        clientCert:
+          $ref: '#/components/schemas/PublicKey'
+    PublicKey:
+      description: client public key
+      type: object
+      required:
+        - name
+        - key
+        - createdAt
+      properties:
+        name:
+          type: string
+          example: certname
+          description: Client certificate name
+        key:
+          type: string
+          description: Base64 encoded client certificate pem key
+          example: P+Hc5bBWNvmCjXH58PbLVakwltg==
+        createdAt:
+          type: string
+          format: date
+        roleName:
+          type: string
+          description: default authorization role name
+          example: allow-all-permissions
+    NewPublicKey:
+      type: object
+      required:
+        - name
+        - key
+      properties:
+        name:
+          type: string
+          example: certname
+          description: Client certificate name
+        key:
+          type: string
+          description: Base64 encoded client certificate pem key
+          example: P+Hc5bBWNvmCjXH58PbLVakwltg==
+        roleName:
+          type: string
+          description: default authorization role name
+          example: allow-all-permissions
+    JWTAuthConfigResponse:
+      type: object
+      properties:
+        jwtData:
+          $ref: '#/components/schemas/JWTAuthConfig'
+    JWTAuthConfig:
+      description: JWT config to auth clients
+      type: object
+      required:
+        - jwksEndpoint
+        - claims
+      properties:
+        claims:
+          type: object
+          additionalProperties:
+            type: string
+          description: Reserved & Custom claims - key-value pair that are provided in the payload of the JWT and are used to assert information about the bearer of the token.
+          example:
+            iss: jwt-service
+            sub: my-mqtt-client
+            aud: hivemq.com
+            iat: 1573567292
+            exp: 1573653692
+            scope: [
+              "publish",
+              "subscribe"
+            ]
+        jwksEndpoint:
+          type: string
+          example: https://jwt-service/keys
+          description:  set of public keys that the JWT provider issues for verification of the JWTs.https://datatracker.ietf.org/doc/html/rfc7519
+        roleName:
+          type: string
+          description: default authorization role name
+          example: allow-all-permissions
+        introspectionEndpoint:
+          type: string
+          example: https://jwt-service/token/introspect
+          description: Introspection is an optional method to online verify the validity of a token, after it was issued.
+        simpleAuth:
+          type: object
+          properties:
+            username:
+              type: string
+              example: ese
+              description: Defines the HTTP Simple Auth parameters that are used for introspection requests from ESE to the identity server.
+            password:
+              type: string
+              description: Defines the HTTP Simple Auth parameters that are used for introspection requests from ESE to the identity server.
+              example: client-secret
+        createdAt:
+          type: string
+          format: date
+    PutJWTAuthConfig:
+      type: object
+      description: Put Jwt Auth Body
+      required:
+        - jwtData
+      properties:
+        jwtData:
+          $ref: '#/components/schemas/NewJWTAuthConfig'
+    NewJWTAuthConfig:
+      description: JWT config to auth clients
+      type: object
+      required:
+        - jwksEndpoint
+        - claims
+      properties:
+        claims:
+          type: object
+          additionalProperties:
+            type: string
+          description: Reserved & Custom claims - key-value pair that are provided in the payload of the JWT and are used to assert information about the bearer of the token.
+          example:
+            iss: jwt-service
+            sub: my-mqtt-client
+            aud: hivemq.com
+            iat: 1573567292
+            exp: 1573653692
+            scope: [
+              "publish",
+              "subscribe"
+            ]
+        jwksEndpoint:
+          type: string
+          example: https://jwt-service/keys
+          description:  set of public keys that the JWT provider issues for verification of the JWTs.https://datatracker.ietf.org/doc/html/rfc7519
+        roleName:
+          type: string
+          description: default authorization role name
+          example: allow-all-permissions
+        introspectionEndpoint:
+          type: string
+          example: https://jwt-service/token/introspect
+          description: Introspection is an optional method to online verify the validity of a token, after it was issued.
+        simpleAuth:
+          type: object
+          properties:
+            username:
+              type: string
+              example: ese
+              description: Defines the HTTP Simple Auth parameters that are used for introspection requests from ESE to the identity server.
+            password:
+              type: string
+              description: Defines the HTTP Simple Auth parameters that are used for introspection requests from ESE to the identity server.
+              example: client-secret
