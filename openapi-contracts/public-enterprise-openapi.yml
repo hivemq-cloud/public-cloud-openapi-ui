@@ -1419,6 +1419,65 @@ paths:
           description: Forbidden action
         404:
           description: clusterId not found
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/clients-auth/ese:
+    get:
+      tags:
+        - clients authentication
+      summary: Get Ese Global Role
+      description: Get Ese Global Role
+      operationId: getEseRole
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ese Global Config Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EseConfig'
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
+    put:
+      tags:
+        - clients authentication
+      summary: Put Ese Global Role
+      description: Put Ese Global Role
+      operationId: putEseRole
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: New global ese config
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EseConfig'
+      responses:
+        '204':
+          description: successful operation
+        '403':
+          description: Forbidden action
+        404:
+          description: clusterId not found
 security:
   - bearerAuth: [ ]
 components:
@@ -1538,6 +1597,22 @@ components:
           type: boolean
         sharedGroup:
           type: string
+        applyTo:
+          type: string
+          enum:
+            - x509
+            - JWT
+            - ALL
+          default: ALL
+        variables:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              keyField:
+                type: "string"
+              eseVariable:
+                type: "string"
     MQTTPermissionResponse:
       type: object
       description: MQTT permission object along its ID in the DB which is used to assign permissions to roles
@@ -2021,4 +2096,12 @@ components:
               type: string
               description: Defines the HTTP Simple Auth parameters that are used for introspection requests from ESE to the identity server.
               example: client-secret
+    EseConfig:
+      description: ese global config
+      type: object
+      properties:
+        roleName:
+          type: string
+          example: allow-all-permissions
+          description: default authorization role name
 
