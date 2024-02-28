@@ -1562,7 +1562,7 @@ components:
         applyTo:
           type: string
           enum:
-            - x509
+            - X509
             - JWT
             - ALL
           default: ALL
