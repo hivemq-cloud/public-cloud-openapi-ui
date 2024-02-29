@@ -1250,7 +1250,7 @@ paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/clients-auth/certificate:
     get:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Get Client Certificate
       description: Get Client Certificate
       operationId: getClientCertificate
@@ -1278,7 +1278,7 @@ paths:
           description: clusterId not found
     delete:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Delete Client Certificate
       description: Delete Client Certificate
       operationId: deleteClientCertificate
@@ -1302,7 +1302,7 @@ paths:
           description: clusterId not found
     put:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Put Client Certificate
       description: Put Client Certificate
       operationId: putClientCertificate
@@ -1338,7 +1338,7 @@ paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/clients-auth/jwt:
     get:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Get Client JWT Config
       description: Get Client JWT Config
       operationId: getClientJWTAuthConfig
@@ -1366,7 +1366,7 @@ paths:
           description: clusterId not found
     delete:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Remove JWT Config to use ESE basic credentials
       description: Delete JWT Config to use ESE username & password
       operationId: deleteClientJWTAuthConfig
@@ -1390,7 +1390,7 @@ paths:
           description: clusterId not found
     put:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Upsert JWT Config to use JWTs to auth clients
       description: Upsert JWT Config to use JWTs to auth clients
       operationId: putClientJWTAuthConfig
@@ -1422,7 +1422,7 @@ paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/clients-auth/ese:
     get:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Get Ese Global Role
       description: Get Ese Global Role
       operationId: getEseRole
@@ -1450,7 +1450,7 @@ paths:
           description: clusterId not found
     put:
       tags:
-        - clients authentication
+        - Clients Authentication
       summary: Put Ese Global Role
       description: Put Ese Global Role
       operationId: putEseRole
