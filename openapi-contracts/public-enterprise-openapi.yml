@@ -96,6 +96,11 @@ tags:
     externalDocs:
       description: Find out more
       url: http://hivemq.com
+  - name: Kafka Extensions
+    description: Manage Kafka extension configuration
+    externalDocs:
+      description: Find out more
+      url: http://hivemq.com
 paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/credentials:
     post:
@@ -1478,6 +1483,122 @@ paths:
           description: Forbidden action
         404:
           description: clusterId not found
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/kafka:
+    get:
+      tags:
+        - Kafka Extensions
+      summary: Kafka extension configuration
+      description: Return Kafka extension configuration
+      operationId: getKafkaConfiguration
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaConfigResponse'
+        '403':
+          description: Forbidden action
+        '404':
+          description: clusterId not found
+    put:
+      tags:
+        - Kafka Extensions
+      summary: Upsert Kafka extension configuration
+      description: Upsert Kafka extension configuration
+      operationId: putKafkaConfiguration
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/KafkaConfig"
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponseMessage'
+        '403':
+          description: Forbidden action
+        '404':
+          description: clusterId not found
+    delete:
+      tags:
+        - Kafka Extensions
+      summary: Delete Kafka extension configuration
+      description: Delete Kafka extension configuration
+      operationId: deleteKafkaConfiguration
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: successful operation
+        '403':
+          description: Forbidden action
+        '404':
+          description: clusterId not found
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/kafka/status:
+    get:
+      tags:
+        - Kafka Extensions
+      summary: Get Kafka status
+      description: Get Kafka status
+      operationId: getKafkaStatus
+      parameters:
+        - name: orgId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KafkaStatusResponse'
+        '403':
+          description: Forbidden action
+        '404':
+          description: clusterId not found
 security:
   - bearerAuth: [ ]
 components:
@@ -1487,6 +1608,157 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    KafkaStatusResponse:
+      type: object
+      properties:
+        kafkaStatus:
+          $ref: '#/components/schemas/KafkaStatus'
+    KafkaConfigResponse:
+      properties:
+        kafkaConfig:
+          $ref: '#/components/schemas/KafkaConfig'
+    SuccessResponseMessage:
+      properties:
+        success:
+          type: string
+        msg:
+          type: string
+    KafkaExtRequestId:
+      properties:
+        ticketId:
+          type: string
+          example: "067e6162-3b6f-4ae2-a171-2470b63dff00"
+    KafkaStatus:
+      type: object
+      properties:
+        message:
+          type: string
+        status:
+          type: string
+    KafkaConfig:
+      type: object
+      properties:
+        clusterId:
+          type: string
+        clientId:
+          type: string
+        bootstrapServers:
+          type: array
+          items:
+            type: string
+        provider:
+          $ref: '#/components/schemas/Provider'
+        kafkaAuthenticationSelected:
+          $ref: '#/components/schemas/KafkaAuthenticationSelected'
+        mqttToKafkaMapping:
+          $ref: '#/components/schemas/MqttToKafkaMapping'
+        KafkaToMqttMapping:
+          $ref: '#/components/schemas/KafkaToMqttMapping'
+        kafkaAuthenticationPlain:
+          $ref: '#/components/schemas/kafkaAuthenticationPlain'
+    Provider:
+      type: string
+      enum:
+        - Kafka
+        - ConfluentCloud
+        - Aiven
+    KafkaAuthenticationSelected:
+      type: string
+      enum:
+        - PLAIN
+        - SCRAM
+        - KERBEROS
+    kafkaAuthenticationPlain:
+      properties:
+        username:
+          type: string
+          example: "scooby"
+        password:
+          type: string
+          example: "doo"
+    MqttToKafkaMapping:
+      type: object
+      properties:
+        mqttTopicFilters:
+          type: array
+          items:
+            type: string
+        kafkaTopic:
+          type: array
+          items:
+            type: string
+        kafkaAcks:
+          $ref: '#/components/schemas/KafkaAcks'
+        kafkaMaxRequestSizeBytes:
+          type: integer
+          format: int64
+    KafkaToMqttMapping:
+      type: object
+      properties:
+        kafkaTopic:
+          type: array
+          items:
+            type: string
+        useSchemaRegistry:
+          $ref: '#/components/schemas/UseSchemaRegistry'
+        mqttTopics:
+          type: array
+          items:
+            type: string
+        mqttPayload:
+          $ref: '#/components/schemas/MqttPayload'
+        mqttPublishFields:
+          $ref: '#/components/schemas/MqttPublishFields'
+    KafkaAcks:
+      type: string
+      enum:
+        - ZERO
+        - ONE
+        - ACK
+    UseSchemaRegistry:
+      type: string
+      enum:
+        - none
+        - local
+        - confluent
+    MqttPayload:
+      type: string
+      enum:
+        - bytes
+        - other
+    PayloadFormatIndicator:
+      type: string
+      enum:
+        - UTF8
+        - UNSPECIFIED
+    Qos:
+      type: string
+      enum:
+        - atMostOnce
+        - atLeastOnce
+        - exactlyOnce
+    MqttPublishFields:
+      type: object
+      properties:
+        retainedFlag:
+          type: boolean
+        payloadFormatIndicator:
+          $ref: '#/components/schemas/PayloadFormatIndicator'
+        messageExpiryInterval:
+          type: integer
+          format: int64
+        responseTopic:
+          type: string
+        correlationData:
+          type: string
+        contentType:
+          type: string
+        qos:
+          $ref: '#/components/schemas/Qos'
+        userProperties:
+          type: object
+          additionalProperties:
+            type: string
     RolesListResponse:
       type: object
       properties:
