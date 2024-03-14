@@ -16,7 +16,7 @@ info:
     HiveMQ Cloud offers REST APIs designed to seamlessly extend your MQTT workflows programmatically.
     These APIs enable users to perform a variety of actions related to client credential management and access control.
 
-    HiveMQ's Cloud REST API provides endpoints for the following use cases:
+    HiveMQ Cloud REST API provides endpoints for the following use cases:
     - Listing all MQTT Credentials
     - Listing all roles and permissions
     - Assign and un-assign permissions to roles
