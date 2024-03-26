@@ -39,14 +39,9 @@ info:
      All incoming and outgoing events uses `application/json` as body.
 
      ## Streaming Logs tail
-     `ws://{HOST}}:{}PORT/orgs/1/clusters/1/stream/logs/tail?delay_for=5&limit=50`
+     `ws://{HOST}}:{}PORT/orgs/1/clusters/1/stream/logs/tail`
+
      After the base path described above, `stream/logs/tail` will stream log events.
-
-      delay_for: The number of seconds to delay retrieving logs to let slow loggers catch up. Defaults to 0 and cannot be larger than 5.
-
-      limit: The max number of entries to return. It defaults to 100.
-
-      start: The start time for the query as a nanosecond Unix epoch. Defaults to one hour ago.
 
          ### Response Example
          ```

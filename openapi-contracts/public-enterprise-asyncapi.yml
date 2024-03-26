@@ -26,27 +26,6 @@ channels:
               description: The cluster unique identifier.
               schema:
                   type: string
-        parameters:
-            - name: delay_for
-              in: query
-              description: The number of seconds to delay retrieving logs.
-              schema:
-                  type: integer
-                  maximum: 5
-                  default: 0
-            - name: limit
-              in: query
-              description: The max number of entries to return.
-              schema:
-                  type: integer
-                  default: 100
-            - name: start
-              in: query
-              description: The start time for the query as a nanosecond Unix epoch.
-              schema:
-                  type: integer  # Assuming nanosecond Unix epoch is an integer
-                  default: 0  # Defaults to one hour ago
-
         publish:
             message:
                 $ref: '#/components/messages/logStreamMessage'
