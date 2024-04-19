@@ -1,0 +1,221 @@
+openapi: 3.0.3
+servers:
+  - url: https://{baseUrl}
+    description: The production API server
+    variables:
+      baseUrl:
+        default: api.apigwuri.notset
+info:
+  title: HiveMQ Cloud Public Portal REST API
+  x-logo:
+    url: https://www.hivemq.com/img/svg/hivemq-bee.svg
+  description: |2
+
+    # Introduction
+
+    HiveMQ Cloud offers REST APIs designed to seamlessly extend your MQTT workflows programmatically.
+    These APIs enable users to perform a variety of actions related to cluster and extension management.
+
+
+  contact:
+    email: support@hivemq.com
+  version: 1.0.0
+externalDocs:
+  description: HiveMQ Cloud documentation
+  url: https://docs.hivemq.com/hivemq-cloud/introduction
+tags:
+  - name: Cluster Config
+    description: HiveMQ Cluster Configuration
+    externalDocs:
+      description: Find out more
+      url: https://hivemq.com
+paths:
+  /api/v3/clusters/extensions:
+    get:
+      tags:
+        - Cluster Config
+      summary: Get Supported Extensions
+      description: Get Supported Extensions
+      operationId: getSupportedExtensions
+      responses:
+        200:
+          description: getSupportedExtensions 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  example: Kinesis
+        403:
+          description: Forbidden action
+  /api/v3/clusters/schemas/config:
+    get:
+      tags:
+        - Cluster Config
+      summary: Get Mutable Cluster Config Schema
+      description: Get Mutable Cluster Config Schema
+      operationId: getMutableClusterConfigSchema
+      responses:
+        200:
+          description: getMutableClusterConfigSchema 200 response
+          content:
+            application/xml:
+              schema:
+                type: string
+        403:
+          description: Forbidden action
+  /api/v3/orgs/{orgId}/clusters/{clusterId}/config:
+    get:
+      tags:
+        - Cluster Config
+      summary: Get Cluster Config
+      description: Get Cluster Config
+      operationId: getClusterConfig
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          description: Cluster ID
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: getClusterConfig 200 response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusterConfigResponse'
+        403:
+          description: Forbidden action
+    put:
+      tags:
+        - Cluster Config
+      summary: Put Cluster Config
+      description: Put Cluster Config
+      operationId: putClusterConfig
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          description: Cluster ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Cluster configuration
+        content:
+          application/xml:
+            schema:
+              type: string
+      responses:
+        200:
+          description: putClusterConfig 200 response
+        403:
+          description: Forbidden action
+  /api/v3/orgs/{orgId}/clusters/{clusterId}/extensions/{extension}/config:
+    get:
+      tags:
+        - Cluster Config
+      summary: Get Cluster Extension Config
+      description: Get Cluster Extension Config
+      operationId: getClusterExtensionConfig
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          description: Cluster ID
+          required: true
+          schema:
+            type: string
+        - name: extension
+          in: path
+          description: Extension
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: getClusterExtensionConfig 200 response
+          content:
+            application/xml:
+              schema:
+                type: string
+        403:
+          description: Forbidden action
+    put:
+      tags:
+        - Cluster Config
+      summary: Put Cluster Extension Config
+      description: Put Cluster Extension Config
+      operationId: putClusterExtensionConfig
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          description: Cluster ID
+          required: true
+          schema:
+            type: string
+        - name: extension
+          in: path
+          description: Extension
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Cluster Extension Configuration
+        content:
+          application/xml:
+            schema:
+              type: string
+      responses:
+        200:
+          description: putClusterExtensionConfig 200 response
+        403:
+          description: Forbidden action
+
+security:
+  - bearerAuth: [ ]
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ClusterConfigResponse:
+      properties:
+        orgId:
+          type: string
+          example: oakf08
+        customerId:
+          type: string
+          example: 1234
+        clusterId:
+          type: string
+          example: 3e3618f2-1a15-4888-8b6d-01b525d9b9d4
+        config:
+          type: string
+          example: <>
