@@ -91,11 +91,9 @@ paths:
         200:
           description: Successful request
           content:
-            application/json:
+            text/plain:
               schema:
-                type: object
-                additionalProperties:
-                  type: string
+                type: string
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/credentials:
     post:
       tags:
