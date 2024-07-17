@@ -30,7 +30,7 @@ info:
     Stream API is exposed as a websocket in which URI is built on top of this base path `/orgs/{orgId}/clusters/{clusterId}/`,
     where clusterId is the cluster unique identifier amd orgId is the organisation identifier which the cluster belongs to.
 
-    Download the [Async API definition](public-enterpise-asyncapi.yml)
+    Download the [Async API definition](public-enterprise-asyncapi.yml)
 
      ## Streaming Authorization
      It is mandatory to send the Api Key as an Authorization header with a bearerAuth format, similar to the REST API.
@@ -39,25 +39,34 @@ info:
      All incoming and outgoing events uses `application/json` as body.
 
      ## Streaming Logs tail
-     `ws://{HOST}}:{}PORT/orgs/1/clusters/1/stream/logs/tail`
+     `ws://{HOST}:{PORT}/orgs/1/clusters/1/stream/logs/tail?file=event.log`
 
-     After the base path described above, `stream/logs/tail` will stream log events.
+     file query param accepts multiple files in a comma separated value format, i.e ?file=event.log,customer.log.
+     Empty file query param will result in the streaming event.log as default
 
-         ### Response Example
-         ```
-            {"streams": [{
-                      "stream": {
-                                    <label key-value pairs>
-                      },
-                      "values": [
-                          [
-                              <string: nanosecond unix epoch>,
-                              <string: log line>
-                          ]
-                      ]
-                  }
-              ]}
-         ```
+     Accepted files are:
+     ```
+      access.log
+      event.log
+      customer.log
+      script.log
+      datahub.log
+     ```
+
+     After the base path described above, `stream/logs/tail?file=event.log` will stream log events.
+
+     ### Response Example
+
+            {
+              "time":"2024-06-27T08:12:12.909Z",
+              "message":"Client ID: myclient, IP: ********* disconnected ungracefully from TCP Listener with TLS on port: *********.",
+              "logger":"event.client-disconnected",
+              "event":"CLIENT_DISCONNECTED",
+              "gracefulDisconnect":false,
+              "ip":"*********",
+              "file":"event.log"
+            }
+
 
   contact:
     email: support@hivemq.com

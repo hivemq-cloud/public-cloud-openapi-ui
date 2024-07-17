@@ -26,6 +26,12 @@ channels:
               description: The cluster unique identifier.
               schema:
                   type: string
+            - name: file
+              in: query
+              required: false
+              schema:
+                type: string
+              example: event.log,customer.log
         publish:
             message:
                 $ref: '#/components/messages/logStreamMessage'
