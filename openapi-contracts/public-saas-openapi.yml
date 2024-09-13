@@ -260,7 +260,36 @@ paths:
           description: Missing parameter or otherwise incorrect request
         404:
           description: Account, cluster, org, etc. does not exist
-
+    put:
+      tags:
+        - MQTT Permissions
+      summary: Update permission list
+      operationId: updateMqttPermissionList
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpsertPermissionListRequest"
+      responses:
+        200:
+          description: successful operation
+        400:
+          description: Missing parameter or otherwise incorrect request
+        404:
+          description: Account, cluster, org, etc. does not exist
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/permissions/{id}:
     put:
       tags:
@@ -486,6 +515,42 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/RolePermissionsListResponse'
+        404:
+          description: If no cluster is found for the current user return a not found
+            response.
+        422:
+          description: If the cluster is not running return a unprocessable entity
+            response.
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleName}/permissions:
+    get:
+      tags:
+        - MQTT Roles
+      summary: List all valid roles for MQTT users in a selected cluster by role name.
+      operationId: listMqttPermissionsByRole
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: roleName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: List role permissions for the given cluster and role name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MqttRolePermissionsByRoleResponse'
         404:
           description: If no cluster is found for the current user return a not found
             response.
@@ -1600,6 +1665,83 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    UpsertPermissionListRequest:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PermissionWithRoles'
+    PermissionWithRoles:
+      type: object
+      description: a single MQTT permission with roles list
+      required:
+        - name
+        - topic
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        topic:
+          type: string
+        publishAllowed:
+          type: boolean
+        subscribeAllowed:
+          type: boolean
+        qos0Allowed:
+          type: boolean
+        qos1Allowed:
+          type: boolean
+        qos2Allowed:
+          type: boolean
+        retainedMsgsAllowed:
+          type: boolean
+        sharedSubAllowed:
+          type: boolean
+        sharedGroup:
+          type: string
+        roles:
+          type: "array"
+          items:
+            type: "string"
+    MqttRolePermissionsByRoleResponse:
+      type: object
+      description: MQTT permission object along with its ID in the DB which is used to assign permissions to roles.
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Permission'
+    Permission:
+      type: object
+      description: a single MQTT permission, to be assigned to a role
+      required:
+        - name
+        - topic
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        topic:
+          type: string
+        publishAllowed:
+          type: boolean
+        subscribeAllowed:
+          type: boolean
+        qos0Allowed:
+          type: boolean
+        qos1Allowed:
+          type: boolean
+        qos2Allowed:
+          type: boolean
+        retainedMsgsAllowed:
+          type: boolean
+        sharedSubAllowed:
+          type: boolean
+        sharedGroup:
+          type: string
     KafkaStatusResponse:
       type: object
       properties:
@@ -1615,11 +1757,6 @@ components:
           type: string
         msg:
           type: string
-    KafkaExtRequestId:
-      properties:
-        ticketId:
-          type: string
-          example: "067e6162-3b6f-4ae2-a171-2470b63dff00"
     KafkaStatus:
       type: object
       properties:
@@ -1861,6 +1998,15 @@ components:
           type: boolean
         sharedGroup:
           type: string
+        roles:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              roleId:
+                type: "string"
+              roleName:
+                type: "string"
         applyTo:
           type: string
           enum:
