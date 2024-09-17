@@ -521,7 +521,7 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleName}/permissions:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}/permissions:
     get:
       tags:
         - MQTT Roles
@@ -539,7 +539,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: roleName
+        - name: roleId
           in: path
           required: true
           schema:
@@ -1710,9 +1710,12 @@ components:
       description: MQTT permission object along with its ID in the DB which is used to assign permissions to roles.
       properties:
         permissions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Permission'
+          $ref: '#/components/schemas/PermissionResp'
+    PermissionResp:
+      type: object
+      properties:
+        permissionInfo:
+          $ref: '#/components/schemas/Permission'
     Permission:
       type: object
       description: a single MQTT permission, to be assigned to a role
@@ -1720,6 +1723,8 @@ components:
         - name
         - topic
       properties:
+        id:
+          type: string
         name:
           type: string
         description:
