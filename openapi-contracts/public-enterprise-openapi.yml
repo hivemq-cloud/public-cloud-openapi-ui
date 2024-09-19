@@ -306,7 +306,7 @@ paths:
     put:
       tags:
         - MQTT Permissions
-      summary: Update permission list
+      summary: Replace permissions
       operationId: updateMqttPermissionList
       parameters:
         - name: orgId
