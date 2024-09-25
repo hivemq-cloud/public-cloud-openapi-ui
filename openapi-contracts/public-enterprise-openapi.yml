@@ -291,14 +291,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpsertPermissionRequest"
+              $ref: "#/components/schemas/UpsertSinglePermissionRequest"
       responses:
         200:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MQTTPermissionResponse"
+                $ref: "#/components/schemas/MQTTSinglePermissionResponse"
         400:
           description: Missing parameter or otherwise incorrect request
         404:
@@ -361,14 +361,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/UpsertPermissionRequest"
+              $ref: "#/components/schemas/UpsertSinglePermissionRequest"
       responses:
         200:
           description: successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MQTTPermissionResponse"
+                $ref: "#/components/schemas/MQTTSinglePermissionResponse"
         400:
           description: Missing parameter or otherwise incorrect request
         404:
@@ -2010,6 +2010,65 @@ components:
         permission:
           $ref: '#/components/schemas/MQTTPermission'
 
+    UpsertSinglePermissionRequest:
+      type: object
+      properties:
+        permission:
+          $ref: '#/components/schemas/MQTTSinglePermission'
+
+    MQTTSinglePermission:
+      type: object
+      description: a single MQTT permission, to be assigned to a role
+      required:
+        - name
+        - description
+        - topic
+        - publishAllowed
+        - subscribeAllowed
+        - qos0Allowed
+        - qos1Allowed
+        - qos2Allowed
+        - retainedMsgsAllowed
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        topic:
+          type: string
+        publishAllowed:
+          type: boolean
+        subscribeAllowed:
+          type: boolean
+        qos0Allowed:
+          type: boolean
+        qos1Allowed:
+          type: boolean
+        qos2Allowed:
+          type: boolean
+        retainedMsgsAllowed:
+          type: boolean
+        sharedSubAllowed:
+          type: boolean
+        sharedGroup:
+          type: string
+        applyTo:
+          type: string
+          enum:
+            - X509
+            - JWT
+            - ALL
+          default: ALL
+        variables:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              keyField:
+                type: "string"
+              eseVariable:
+                type: "string"
+
     MQTTPermission:
       type: object
       description: a single MQTT permission, to be assigned to a role
@@ -2071,6 +2130,14 @@ components:
                 type: "string"
               eseVariable:
                 type: "string"
+    MQTTSinglePermissionResponse:
+      type: object
+      description: MQTT permission object along its ID in the DB which is used to assign permissions to roles
+      required:
+        - permissionInfo
+      properties:
+        permissionInfo:
+          $ref: '#/components/schemas/MQTTSinglePermission'
     MQTTPermissionResponse:
       type: object
       description: MQTT permission object along its ID in the DB which is used to assign permissions to roles
