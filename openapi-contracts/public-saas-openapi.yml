@@ -69,31 +69,31 @@ tags:
       description: Find out more
       url: http://hivemq.com
 paths:
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/metrics:
-    get:
-      tags:
-        - Metrics
-      summary: expose OTEL broker metrics
-      operationId: brokerOtelMetrics
-      parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        200:
-          description: Successful request
-          content:
-            text/plain:
-              schema:
-                type: string
+#  /api/v2/orgs/{orgId}/clusters/{clusterId}/metrics:
+#    get:
+#      tags:
+#        - Metrics
+#      summary: expose OTEL broker metrics
+#      operationId: brokerOtelMetrics
+#      parameters:
+#        - name: orgId
+#          in: path
+#          description: Organisation ID
+#          required: true
+#          schema:
+#            type: string
+#        - name: clusterId
+#          in: path
+#          required: true
+#          schema:
+#            type: string
+#      responses:
+#        200:
+#          description: Successful request
+#          content:
+#            text/plain:
+#              schema:
+#                type: string
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/credentials:
     post:
       tags:
