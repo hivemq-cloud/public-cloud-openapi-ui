@@ -1713,6 +1713,7 @@ components:
       properties:
         permissions:
           type: array
+          maxItems: 2500
           items:
             $ref: '#/components/schemas/PermissionWithRoles'
     PermissionWithRoles:
