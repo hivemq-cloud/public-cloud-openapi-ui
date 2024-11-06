@@ -36,13 +36,13 @@ info:
      It is mandatory to send the Api Key as an Authorization header with a bearerAuth format, similar to the REST API.
 
      ## Streaming content type
-     All incoming and outgoing events uses `application/json` as body.
+     All incoming and outgoing events use `application/json` as the body.
 
      ## Streaming Logs tail
      `ws://{HOST}:{PORT}/orgs/1/clusters/1/stream/logs/tail?file=event.log`
 
-     file query param accepts multiple files in a comma separated value format, i.e ?file=event.log,customer.log.
-     Empty file query param will result in the streaming event.log as default
+     The file query parameter accepts multiple files in a comma-separated value format. For example, `?file=event.log,customer.log`.
+     An empty file query parameter results in the streaming `event.log` by default
 
      Accepted files are:
      ```
@@ -53,7 +53,7 @@ info:
       datahub.log
      ```
 
-     After the base path described above, `stream/logs/tail?file=event.log` will stream log events.
+     After the base path described above, `stream/logs/tail?file=event.log` streams log events.
 
      ### Response Example
 
@@ -86,8 +86,6 @@ tags:
     description: User - Roles Management
   - name: Clients Authentication
     description: clients authentication
-  - name: Kafka Extensions
-    description: Manage Kafka extension configuration
 paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/metrics:
     get:
@@ -95,29 +93,29 @@ paths:
         - Metrics
       summary: Get Broker Metrics
       operationId: brokerOtelMetrics
-      description: This API allows you to access various performance and operational metrics related to the MQTT broker. These metrics help you monitor the health and activity of your HiveMQ Cloud broker, providing insight into client connections, message delivery, and more.
+      description: This API allows you to access various performance and operational metrics related to the MQTT broker. These metrics help you monitor the health and activity of your HiveMQ Cloud broker, providing insights into client connections, message delivery, and more.
       parameters:
         - name: orgId
           in: path
-          description: The unique identifier for your organization. This should be provided as a string in the API request.
+          description: The unique identifier of your organization. Provide this identifier as a string in the API request.
           required: true
           schema:
             type: string
         - name: clusterId
           in: path
-          description: The unique identifier for the broker cluster you want to monitor. This should be provided as a string in the API request.
+          description: The unique identifier of the broker cluster to monitor. Provide this identifier as a string in the API request.
           required: true
           schema:
             type: string
       responses:
         200:
-          description: The response contains various metrics that are categorized into different areas such as client connections, message delivery, and subscriptions. Each metric provides you with an understanding of different aspects of the broker's operation, helping you manage and optimize your IoT infrastructure effectively.
+          description: The response contains various metrics categorized into different areas such as client connections, message delivery, and subscriptions. Each metric offers insights into specific aspects of the broker's operation to help you effectively manage and optimize your IoT infrastructure.
           content:
             text/plain:
               schema:
                 type: string
               example: |
-                Here is a sample of the data the API will return. Each metric includes a brief description of what it represents, followed by the metric type and its current value.
+                The following example shows the type of metric data the API returns. Each metric includes a brief description, followed by the metric type and the current value.
                 - Client Connections Metrics:
                   hivemq_cloud_keep_alive_disconnect_count:
                     Description: The number of connections closed because the client missed sending a keep-alive message.
@@ -1582,122 +1580,6 @@ paths:
         '403':
           description: Forbidden action
         404:
-          description: clusterId not found
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/kafka:
-    get:
-      tags:
-        - Kafka Extensions
-      summary: Kafka extension configuration
-      description: Return Kafka extension configuration
-      operationId: getKafkaConfiguration
-      parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KafkaConfigResponse'
-        '403':
-          description: Forbidden action
-        '404':
-          description: clusterId not found
-    put:
-      tags:
-        - Kafka Extensions
-      summary: Upsert Kafka extension configuration
-      description: Upsert Kafka extension configuration
-      operationId: putKafkaConfiguration
-      parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/KafkaConfig"
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponseMessage'
-        '403':
-          description: Forbidden action
-        '404':
-          description: clusterId not found
-    delete:
-      tags:
-        - Kafka Extensions
-      summary: Delete Kafka extension configuration
-      description: Delete Kafka extension configuration
-      operationId: deleteKafkaConfiguration
-      parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: successful operation
-        '403':
-          description: Forbidden action
-        '404':
-          description: clusterId not found
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/kafka/status:
-    get:
-      tags:
-        - Kafka Extensions
-      summary: Get Kafka status
-      description: Get Kafka status
-      operationId: getKafkaStatus
-      parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/KafkaStatusResponse'
-        '403':
-          description: Forbidden action
-        '404':
           description: clusterId not found
 security:
   - bearerAuth: [ ]
