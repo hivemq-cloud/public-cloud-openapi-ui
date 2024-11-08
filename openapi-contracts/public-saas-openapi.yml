@@ -1983,6 +1983,8 @@ components:
         - qos2Allowed
         - retainedMsgsAllowed
       properties:
+        id:
+          type: string
         name:
           type: string
         description:
