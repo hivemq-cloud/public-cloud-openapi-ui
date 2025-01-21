@@ -41,7 +41,7 @@ info:
      ## Streaming Logs tail
      `ws://{HOST}:{PORT}/orgs/1/clusters/1/stream/logs/tail?file=event.log`
 
-     The file query parameter accepts multiple files in a comma-separated value format. For example, `?file=event.log,customer.log`.
+     The file query parameter accepts multiple files by repeating the parameter for each file. For example, `?file=event.log&file=customer.log`.
      An empty file query parameter results in the streaming `event.log` by default
 
      Accepted files are:
