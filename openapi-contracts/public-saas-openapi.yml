@@ -33,6 +33,7 @@ externalDocs:
   description: HiveMQ Cloud documentation
   url: https://docs.hivemq.com/hivemq-cloud/introduction
 tags:
+  - name: Metrics
   - name: MQTT Credentials
     description: Manage MQTT credentials
     externalDocs:
@@ -59,31 +60,54 @@ tags:
       description: Find out more
       url: http://hivemq.com
 paths:
-  #  /api/v2/orgs/{orgId}/clusters/{clusterId}/metrics:
-  #    get:
-  #      tags:
-  #        - Metrics
-  #      summary: expose OTEL broker metrics
-  #      operationId: brokerOtelMetrics
-  #      parameters:
-  #        - name: orgId
-  #          in: path
-  #          description: Organisation ID
-  #          required: true
-  #          schema:
-  #            type: string
-  #        - name: clusterId
-  #          in: path
-  #          required: true
-  #          schema:
-  #            type: string
-  #      responses:
-  #        200:
-  #          description: Successful request
-  #          content:
-  #            text/plain:
-  #              schema:
-  #                type: string
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/metrics:
+    get:
+      tags:
+        - Metrics
+      summary: Get Broker Metrics
+      operationId: brokerOtelMetrics
+      description: This API allows you to access various performance and operational metrics for the MQTT broker. These metrics help you monitor the health and activity of your HiveMQ Cloud broker, providing insights into client connections, message delivery, and overall system performance.
+      parameters:
+        - name: orgId
+          in: path
+          description: The unique identifier of your organization. Provide this identifier as a string in the API request.
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          description: The unique identifier of the broker cluster to monitor. Provide this identifier as a string in the API request.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: The response contains a variety of metrics categorized into key areas such as client connections, message delivery, and subscriptions. Each metric offers insights into specific aspects of the broker's operation to help you effectively monitor, manage, and optimize your IoT infrastructure.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |
+                The following example shows the type of metric data the API returns. Each metric includes a brief description, the metric type, and the current value.
+                - Client Connections Metrics:
+                  hivemq_cloud_keep_alive_disconnect_count:
+                    Description: The number of connections closed because the client missed sending a keep-alive message during the keep-alive interval.
+                    Type: Gauge
+                    Value: 0
+                - Message Delivery Metrics:
+                  hivemq_cloud_messages_incoming_connect_count:
+                    Description: The total number of incoming MQTT CONNECT messages received.
+                    Type: Gauge
+                    Value: 48,963
+                  hivemq_cloud_messages_dropped_queue_full_count:
+                    Description: The number of messages dropped because the queue of a disconnected client with a persistent session was full.
+                    Type: Gauge
+                    Value: 0
+                - Subscription Metrics:
+                  hivemq_cloud_subscriptions_overall_current:
+                    Description: The current number of subscriptions on the broker.
+                    Type: Gauge
+                    Value: 0
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/credentials:
     post:
       tags:

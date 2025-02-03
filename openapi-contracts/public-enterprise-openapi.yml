@@ -93,7 +93,7 @@ paths:
         - Metrics
       summary: Get Broker Metrics
       operationId: brokerOtelMetrics
-      description: This API allows you to access various performance and operational metrics related to the MQTT broker. These metrics help you monitor the health and activity of your HiveMQ Cloud broker, providing insights into client connections, message delivery, and more.
+      description: This API allows you to access various performance and operational metrics for the MQTT broker. These metrics help you monitor the health and activity of your HiveMQ Cloud broker, providing insights into client connections, message delivery, and overall system performance.
       parameters:
         - name: orgId
           in: path
@@ -109,16 +109,16 @@ paths:
             type: string
       responses:
         200:
-          description: The response contains various metrics categorized into different areas such as client connections, message delivery, and subscriptions. Each metric offers insights into specific aspects of the broker's operation to help you effectively manage and optimize your IoT infrastructure.
+          description: The response contains a variety of metrics categorized into key areas such as client connections, message delivery, and subscriptions. Each metric offers insights into specific aspects of the broker's operation to help you effectively monitor, manage, and optimize your IoT infrastructure.
           content:
             text/plain:
               schema:
                 type: string
               example: |
-                The following example shows the type of metric data the API returns. Each metric includes a brief description, followed by the metric type and the current value.
+                The following example shows the type of metric data the API returns. Each metric includes a brief description, the metric type, and the current value.
                 - Client Connections Metrics:
                   hivemq_cloud_keep_alive_disconnect_count:
-                    Description: The number of connections closed because the client missed sending a keep-alive message.
+                    Description: The number of connections closed because the client missed sending a keep-alive message during the keep-alive interval.
                     Type: Gauge
                     Value: 0
                 - Message Delivery Metrics:
@@ -127,12 +127,12 @@ paths:
                     Type: Gauge
                     Value: 48,963
                   hivemq_cloud_messages_dropped_queue_full_count:
-                    Description: The number of messages dropped because a queue for a disconnected session client was full.
+                    Description: The number of messages dropped because the queue of a disconnected client with a persistent session was full.
                     Type: Gauge
                     Value: 0
                 - Subscription Metrics:
                   hivemq_cloud_subscriptions_overall_current:
-                    Description: The current total number of subscriptions on the broker.
+                    Description: The current number of subscriptions on the broker.
                     Type: Gauge
                     Value: 0
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/credentials:
