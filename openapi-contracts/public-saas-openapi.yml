@@ -62,6 +62,212 @@ tags:
   - name: Cluster Configuration
     description: Cluster Configuration
 paths:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search:
+    get:
+      description: |
+        Searches clients based on query parameters. Filters are grouped by type: boolean, string, and number.
+
+        Available columns:
+        - ID (string, primary key): The MQTT client identifier.
+        - CONNECTED (boolean): Whether the client is currently connected.
+        - CONNECTED_NODE (string): The node the client is connected to.
+        - IP_ADDRESS (string): The client's IP address.
+        - USER_NAME (string): The username used by the client.
+        - MAX_QUEUE_SIZE (number): The maximum queue size for the client.
+        - CURRENT_QUEUE_SIZE (number): The current queue size for the client.
+        - TIMESTAMP (number): The timestamp of the last session update.
+
+        Filter types:
+        - Boolean filters: `type:value` (e.g., CONNECTED:true)
+        - String filters: `type:operation:value` (e.g., ID:EQ:client1, USER_NAME:NOT_EQ:admin)
+        - Number filters: `type:operation:value` (e.g., MAX_QUEUE_SIZE:GT:100, TIMESTAMP:LTE:1700000000)
+
+        Supported operations for string filters: EQ (equals), NOT_EQ (not equals), CONTAINS (contains), STARTS_WITH (starts with), ENDS_WITH (ends with), REGEX (regular expression).
+        Supported operations for number filters: EQ (equals), NOT_EQ (not equals), GT (greater than), GTE (greater or equal), LT (less than), LTE (less or equal).
+
+        Examples:
+        - Single boolean filter: CONNECTED:true
+        - Single string filter: ID:EQ:client1
+        - Single number filter: MAX_QUEUE_SIZE:GT:100
+        - Multiple filters: ID:EQ:client1, CONNECTED:true, IP_ADDRESS:NOT_EQ:127.0.0.1, MAX_QUEUE_SIZE:LTE:500
+
+        Example search query URLs:
+        - /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search?boolean-filter=CONNECTED:true
+        - /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search?string-filter=ID:EQ:client1
+        - /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search?number-filter=MAX_QUEUE_SIZE:GT:100
+        - /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search?string-filter=ID:EQ:client1&boolean-filter=CONNECTED:true&string-filter=IP_ADDRESS:NOT_EQ:127.0.0.1&number-filter=MAX_QUEUE_SIZE:LTE:500
+
+        This endpoint requires at least HiveMQ version 4.42.0. on all cluster nodes.
+      operationId: searchMqttClientsGet
+      parameters:
+        - description: List of boolean search filters for client search query.
+          in: query
+          name: boolean-filter
+          schema:
+            type: array
+            items:
+              type: string
+        - description: List of string search filters for client search query.
+          in: query
+          name: string-filter
+          schema:
+            type: array
+            items:
+              type: string
+        - description: List of number search filters for client search query.
+          in: query
+          name: number-filter
+          schema:
+            type: array
+            items:
+              type: string
+        - description: Specifies the page size for the returned results. Has to be between
+            50 and 2500. Default page size is 500.
+          in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+        - description: The cursor that has been returned by the previous result page.
+            Do not pass this parameter if you want to fetch the first page.
+          in: query
+          name: cursor
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              examples:
+                empty-results:
+                  description: Empty result if no clients match the search criteria.
+                  summary: Empty search results
+                  value:
+                    items: [ ]
+                    _links:
+                      next: null
+                multiple-results-last-page:
+                  description: Example response with multiple search results. No more
+                    pages left.
+                  summary: "Multiple search results, last page"
+                  value:
+                    items:
+                      - id: client-1
+                        connected: true
+                        connectedNode: node-1
+                        timestamp: 1609459200000
+                        username: user1
+                        ipAddress: 192.168.1.100
+                        currentQueueSize: 5
+                        maximumQueueSize: 1000
+                      - id: client-2
+                        connected: false
+                        connectedNode: node-2
+                        timestamp: 1609459800000
+                        username: user2
+                        ipAddress: 192.168.1.101
+                        currentQueueSize: 0
+                        maximumQueueSize: 500
+                    _links:
+                      next: null
+                multiple-results-pages-left:
+                  description: Example response with multiple search results. More
+                    pages left.
+                  summary: "Multiple search results, more pages left"
+                  value:
+                    items:
+                      - id: client-1
+                        connected: true
+                        connectedNode: node-1
+                        timestamp: 1609459200000
+                        username: user1
+                        ipAddress: 192.168.1.100
+                        currentQueueSize: 5
+                        maximumQueueSize: 1000
+                      - id: client-2
+                        connected: true
+                        connectedNode: node-2
+                        timestamp: 1609459800000
+                        username: user2
+                        ipAddress: 192.168.1.101
+                        currentQueueSize: 0
+                        maximumQueueSize: 500
+                    _links:
+                      next:
+                        href: /api/v1/mqtt/clients/search?cursor=eyJwYWdlIjoyLCJsaW1pdCI6MjV9&pageSize=25&booleanFilter=CONNECTED:true&stringFilter=CLIENT_ID:CONTAINS:client&numberFilter=MESSAGE_QUEUE_SIZE:LTE:100
+                single-result:
+                  description: Example response with one search result.
+                  summary: Single search result
+                  value:
+                    items:
+                      - id: client-1
+                        connected: true
+                        connectedNode: node-1
+                        timestamp: 1609459200000
+                        username: user1
+                        ipAddress: 192.168.1.100
+                        currentQueueSize: 5
+                        maximumQueueSize: 1000
+                    _links:
+                      next: null
+              schema:
+                $ref: "#/components/schemas/ClientSearchList"
+          description: Success
+        "400":
+          content:
+            application/json:
+              examples:
+                invalid parameter:
+                  description: Bad request
+                  summary: Invalid search parameter
+                  value:
+                    errors:
+                      - title: Invalid search request parameters
+                        detail: "Invalid string filter format: ID:test. Expected format:\
+                         \ 'type:operation:value'."
+                param-missing:
+                  description: Bad request
+                  summary: Required URL parameter missing
+                  value:
+                    errors:
+                      - title: Required parameter missing
+                        detail: Required URL parameter 'parameterName' is missing
+              schema:
+                $ref: "#/components/schemas/Errors"
+          description: Bad request
+        "410":
+          content:
+            application/json:
+              examples:
+                cursor-invalid:
+                  description: Cursor not valid anymore
+                  summary: The passed cursor is not valid anymore
+                  value:
+                    errors:
+                      - title: Cursor not valid anymore
+                        detail: "The passed cursor is not valid anymore, you can request\
+                         \ this resource without a cursor to start from the beginning"
+              schema:
+                $ref: "#/components/schemas/Errors"
+          description: Cursor not valid anymore
+        "503":
+          content:
+            application/json:
+              examples:
+                version-check-failed:
+                  description: Version check failed
+                  summary: Version check failed
+                  value:
+                    errors:
+                      - title: Endpoint not active yet
+                        detail: "Not all cluster nodes support this endpoint yet, please\
+                         \ try again later"
+              schema:
+                $ref: "#/components/schemas/Errors"
+          description: Not all cluster nodes at minimum version
+      summary: Search and filter clients via GET parameters
+      tags:
+        - MQTT Clients
   /api/v2/orgs/{orgId}/clusters/{clusterId}/metrics:
     get:
       tags:
@@ -1873,6 +2079,44 @@ components:
       properties:
         permission:
           $ref: '#/components/schemas/MQTTSinglePermission'
+    ClientSearchList:
+      type: object
+      properties:
+        _links:
+          $ref: "#/components/schemas/PaginationCursor"
+        items:
+          type: array
+          description: List of result items that are returned by this endpoint
+          items:
+            $ref: "#/components/schemas/ClientAsSearchResult"
+
+    ClientAsSearchResult:
+      type: object
+      description: List of result items that are returned by this endpoint
+      properties:
+        connected:
+          type: boolean
+        connectedNode:
+          type: string
+        currentQueueSize:
+          type: integer
+          format: int64
+        id:
+          type: string
+        ipAddress:
+          type: string
+        maximumQueueSize:
+          type: integer
+          format: int64
+        timestamp:
+          type: integer
+          format: int64
+        username:
+          type: string
+      required:
+        - connected
+        - connectedNode
+        - id
 
     MQTTSinglePermission:
       type: object
