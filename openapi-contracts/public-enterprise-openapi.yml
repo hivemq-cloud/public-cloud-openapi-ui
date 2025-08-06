@@ -128,6 +128,18 @@ paths:
         This endpoint requires at least HiveMQ version 4.42.0. on all cluster nodes.
       operationId: searchMqttClientsGet
       parameters:
+        - name: orgId
+          in: path
+          description: The unique identifier of your organization. Provide this identifier as a string in the API request.
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          description: The unique identifier of the broker cluster to monitor. Provide this identifier as a string in the API request.
+          required: true
+          schema:
+            type: string
         - description: List of boolean search filters for client search query.
           in: query
           name: boolean-filter
