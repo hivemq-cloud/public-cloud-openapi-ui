@@ -358,7 +358,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserInfo"
+                $ref: "#/components/schemas/CredentialsResponse"
         400:
           description: Missing parameter or otherwise incorrect request
         404:
@@ -616,9 +616,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RolesListResponse'
+                $ref: '#/components/schemas/RolesListResponse'
         404:
           description: If no cluster is found for the current user return a not found
             response.
@@ -654,7 +652,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RoleInfo"
+                $ref: "#/components/schemas/RoleResponse"
         400:
           description: Missing parameter or otherwise incorrect request
         404:
@@ -744,9 +742,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/RolePermissionsListResponse'
+                $ref: '#/components/schemas/RolePermissionsListResponse'
         404:
           description: If no cluster is found for the current user return a not found
             response.
@@ -892,9 +888,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/UserRolesListResponse'
+                $ref: '#/components/schemas/UserRolesListResponse'
         404:
           description: If no cluster is found for the current user return a not found
             response.
@@ -1827,7 +1821,9 @@ components:
       description: MQTT permission object along with its ID in the DB which is used to assign permissions to roles.
       properties:
         permissions:
-          $ref: '#/components/schemas/PermissionResp'
+          type: array
+          items:
+            $ref: '#/components/schemas/MQTTPermissionResponse'
     PermissionResp:
       type: object
       properties:
@@ -2054,8 +2050,7 @@ components:
         description:
           type: string
         id:
-          type: integer
-          format: int64
+          type: string
     UserInfo:
       type: object
       properties:
@@ -2075,7 +2070,7 @@ components:
     CredentialsResponse:
       type: object
       properties:
-        UserInfo:
+        userInfo:
           $ref: '#/components/schemas/UserInfo'
 
     UpsertSinglePermissionRequest:
@@ -2286,11 +2281,9 @@ components:
         roleName:
           type: string
         roleId:
-          type: integer
-          format: int64
+          type: string
         permissionId:
-          type: integer
-          format: int64
+          type: string
     RolePermissionsListResponse:
       type: object
       properties:
@@ -2301,10 +2294,10 @@ components:
     UserRolesListResponse:
       type: object
       properties:
-        userRole:
+        roles:
           type: array
           items:
-            $ref: '#/components/schemas/UserRoleResponse'
+            type: string
     UserRoleResponse:
       type: object
       properties:
