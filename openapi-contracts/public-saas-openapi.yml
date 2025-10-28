@@ -451,9 +451,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/MQTTPermissionResponse'
+                $ref: '#/components/schemas/MQTTPermissionListResponse'
         404:
           description: If no cluster is found for the current user return a not found
             response.
@@ -2080,12 +2078,6 @@ components:
         UserInfo:
           $ref: '#/components/schemas/UserInfo'
 
-    UpsertPermissionRequest:
-      type: object
-      properties:
-        permission:
-          $ref: '#/components/schemas/MQTTPermission'
-
     UpsertSinglePermissionRequest:
       type: object
       properties:
@@ -2199,6 +2191,9 @@ components:
         - qos2Allowed
         - retainedMsgsAllowed
       properties:
+        id:
+          type: string
+          description: Unique identifier for the permission
         name:
           type: string
         description:
@@ -2254,6 +2249,16 @@ components:
       properties:
         permissionInfo:
           $ref: '#/components/schemas/MQTTPermission'
+    MQTTPermissionListResponse:
+      type: object
+      description: Wrapper response for listing MQTT permissions
+      required:
+        - permissions
+      properties:
+        permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/MQTTPermissionResponse'
     MQTTSinglePermissionResponse:
       type: object
       description: MQTT permission object along its ID in the DB which is used to assign permissions to roles
