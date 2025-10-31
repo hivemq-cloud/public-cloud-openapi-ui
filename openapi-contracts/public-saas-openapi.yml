@@ -329,6 +329,64 @@ paths:
                     Type: Gauge
                     Value: 0
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/credentials:
+    get:
+      tags:
+        - MQTT Credentials
+      summary: List all MQTT credentials
+      description: |-
+        Lists all MQTT credentials for the specified cluster.
+
+        This endpoint uses cursor-based pagination.
+        The results are not sorted in any way, no ordering of any kind is guaranteed.
+      operationId: listMqttCredentials
+      parameters:
+        - name: orgId
+          in: path
+          description: Organisation ID
+          required: true
+          schema:
+            type: string
+        - name: clusterId
+          in: path
+          required: true
+          schema:
+            type: string
+        - description: Specifies the page size for the returned results. Has to be between
+            50 and 2500. Default page size is 500.
+          in: query
+          name: limit
+          schema:
+            type: integer
+            format: int32
+            minimum: 50
+            maximum: 2500
+        - description: The cursor that has been returned by the previous result page.
+            Do not pass this parameter if you want to fetch the first page.
+          in: query
+          name: cursor
+          schema:
+            type: string
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CredentialsList'
+          description: Success
+        400:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+          description: Bad request
+        410:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Errors'
+          description: Cursor not valid anymore
+        404:
+          description: Org or cluster not found
     post:
       tags:
         - MQTT Credentials
@@ -386,6 +444,7 @@ paths:
           required: true
           schema:
             type: string
+            minLength: 1
       responses:
         200:
           description: successful operation
@@ -2035,6 +2094,17 @@ components:
       properties:
         credentials:
           $ref: '#/components/schemas/Credentials'
+    CredentialsList:
+      type: object
+      description: Paginated list of MQTT credentials
+      properties:
+        _links:
+          $ref: '#/components/schemas/PaginationCursor'
+        items:
+          type: array
+          description: List of credentials returned by this endpoint
+          items:
+            $ref: '#/components/schemas/UserInfo'
     CredentialsListResponse:
       type: object
       properties:
