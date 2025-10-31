@@ -100,18 +100,8 @@ paths:
         This endpoint requires at least HiveMQ version 4.42.0. on all cluster nodes.
       operationId: searchMqttClientsGet
       parameters:
-        - name: orgId
-          in: path
-          description: The unique identifier of your organization. Provide this identifier as a string in the API request.
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          description: The unique identifier of the broker cluster to monitor. Provide this identifier as a string in the API request.
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - description: List of boolean search filters for client search query.
           in: query
           name: boolean-filter
@@ -288,18 +278,8 @@ paths:
       operationId: brokerOtelMetrics
       description: This API allows you to access various performance and operational metrics for the MQTT broker. These metrics help you monitor the health and activity of your HiveMQ Cloud broker, providing insights into client connections, message delivery, and overall system performance.
       parameters:
-        - name: orgId
-          in: path
-          description: The unique identifier of your organization. Provide this identifier as a string in the API request.
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          description: The unique identifier of the broker cluster to monitor. Provide this identifier as a string in the API request.
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         200:
           description: The response contains a variety of metrics categorized into key areas such as client connections, message delivery, and subscriptions. Each metric offers insights into specific aspects of the broker's operation to help you effectively monitor, manage, and optimize your IoT infrastructure.
@@ -340,17 +320,8 @@ paths:
         The results are not sorted in any way, no ordering of any kind is guaranteed.
       operationId: listMqttCredentials
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - description: Specifies the page size for the returned results. Has to be between
             50 and 2500. Default page size is 500.
           in: query
@@ -393,17 +364,8 @@ paths:
       summary: Creates new credentials
       operationId: createMqttCredentials
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       requestBody:
         required: true
         content:
@@ -428,17 +390,8 @@ paths:
       summary: Get MQTT credentials by username
       operationId: getMqttCredentials
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: username
           in: path
           required: true
@@ -462,17 +415,8 @@ paths:
       summary: Delete credentials
       operationId: deleteMqttCredentials
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: username
           in: path
           required: true
@@ -493,17 +437,8 @@ paths:
       summary: List all valid permissions for MQTT users in a selected cluster.
       operationId: listMqttPermissions
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         200:
           description: List all valid permissions for the given cluster.
@@ -523,17 +458,8 @@ paths:
       summary: Create a new permission to assign to MQTT users
       operationId: createMqttPermission
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       requestBody:
         required: true
         content:
@@ -557,17 +483,8 @@ paths:
       summary: Replace permissions
       operationId: updateMqttPermissionList
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       requestBody:
         required: true
         content:
@@ -588,17 +505,8 @@ paths:
       summary: Update permission
       operationId: updateMqttPermission
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: id
           in: path
           required: true
@@ -627,17 +535,8 @@ paths:
       summary: Delete permission
       operationId: deleteMqttPermission
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: id
           in: path
           required: true
@@ -658,17 +557,8 @@ paths:
       summary: List all valid roles for MQTT users in a selected cluster.
       operationId: listMqttRoles
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         200:
           description: List all valid roles for the given cluster.
@@ -688,17 +578,8 @@ paths:
       summary: Create a new role for MQTT credentials
       operationId: createMqttRoles
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       requestBody:
         required: true
         content:
@@ -723,16 +604,8 @@ paths:
       summary: update a specific role
       operationId: updateRole
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: roleId
           in: path
           required: true
@@ -753,17 +626,8 @@ paths:
       summary: Delete role
       operationId: deleteMqttRole
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: roleId
           in: path
           description: Role ID
@@ -784,17 +648,8 @@ paths:
       summary: List all valid roles for MQTT users in a selected cluster.
       operationId: listMqttRolePermissions
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         200:
           description: List role permissions for the given cluster.
@@ -815,17 +670,8 @@ paths:
       summary: List all valid roles for MQTT users in a selected cluster by role name.
       operationId: listMqttPermissionsByRole
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: roleId
           in: path
           required: true
@@ -851,17 +697,8 @@ paths:
       summary: Attach permission to role
       operationId: attachMqttRolePermission
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: roleId
           in: path
           required: true
@@ -888,17 +725,8 @@ paths:
       summary: Detach permission from role
       operationId: detachMqttRolePermission
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: roleId
           in: path
           required: true
@@ -925,17 +753,8 @@ paths:
       summary: List all roles by user
       operationId: listMqttCredentialRoles
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: username
           in: path
           required: true
@@ -961,17 +780,8 @@ paths:
       summary: detach user role
       operationId: detachMqttCredentialRole
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: username
           in: path
           required: true
@@ -999,17 +809,8 @@ paths:
       summary: attach user role
       operationId: attachMqttCredentialRole
       parameters:
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
         - name: username
           in: path
           required: true
@@ -1056,17 +857,8 @@ paths:
           name: cursor
           schema:
             type: string
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         "200":
           content:
@@ -1177,17 +969,8 @@ paths:
           schema:
             type: boolean
             default: false
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         "204":
           content:
@@ -1238,17 +1021,8 @@ paths:
           required: true
           schema:
             type: string
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         "200":
           content:
@@ -1385,17 +1159,8 @@ paths:
           schema:
             type: boolean
             default: false
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         "204":
           content:
@@ -1446,17 +1211,8 @@ paths:
           required: true
           schema:
             type: string
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         "200":
           content:
@@ -1516,17 +1272,8 @@ paths:
           required: true
           schema:
             type: string
-        - name: orgId
-          in: path
-          description: Organisation ID
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         "200":
           content:
@@ -1602,16 +1349,8 @@ paths:
       description: Get Client Certificate
       operationId: getClientCertificate
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         '200':
           description: getClientCertificate 200 response
@@ -1630,16 +1369,8 @@ paths:
       description: Delete Client Certificate
       operationId: deleteClientCertificate
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         '204':
           description: successful operation
@@ -1654,16 +1385,8 @@ paths:
       description: Put Client Certificate
       operationId: putClientCertificate
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       requestBody:
         description: New client certificate
         content:
@@ -1690,16 +1413,8 @@ paths:
       description: Get Client JWT Config
       operationId: getClientJWTAuthConfig
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         '200':
           description: getClientJWTAuthConfig 200 response
@@ -1718,16 +1433,8 @@ paths:
       description: Delete JWT Config to use ESE username & password
       operationId: deleteClientJWTAuthConfig
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         '204':
           description: successful operation
@@ -1742,16 +1449,8 @@ paths:
       description: Upsert JWT Config to use JWTs to auth clients
       operationId: putClientJWTAuthConfig
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       requestBody:
         description: New JWT Config for clients authentication
         content:
@@ -1774,16 +1473,8 @@ paths:
       description: Get Ese Global Role
       operationId: getEseRole
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       responses:
         '200':
           description: Ese Global Config Response
@@ -1802,16 +1493,8 @@ paths:
       description: Put Ese Global Role
       operationId: putEseRole
       parameters:
-        - name: orgId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: clusterId
-          in: path
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
       requestBody:
         description: New global ese config
         content:
@@ -1833,6 +1516,24 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+  parameters:
+    orgId:
+      name: orgId
+      in: path
+      description: The unique identifier of your organization. Provide this identifier as a string in the API request.
+      required: true
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+    clusterId:
+      name: clusterId
+      in: path
+      description: The unique identifier of the broker cluster to monitor. Provide this identifier as a string in the API request.
+      required: true
+      schema:
+        type: string
+        format: uuid
   schemas:
     UpsertPermissionListRequest:
       type: object
