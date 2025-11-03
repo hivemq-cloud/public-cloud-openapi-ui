@@ -1784,18 +1784,25 @@ components:
           $ref: '#/components/schemas/RoleInfo'
     UpsertRoleRequest:
       type: object
+      required:
+        - role
       properties:
         role:
           $ref: '#/components/schemas/Role'
     Role:
       type: object
+      required:
+        - name
       properties:
         name:
           type: string
+          minLength: 1
         description:
           type: string
     UpsertCredentialsRequest:
       type: object
+      required:
+        - credentials
       properties:
         credentials:
           $ref: '#/components/schemas/Credentials'
@@ -1837,11 +1844,16 @@ components:
             type: string
     Credentials:
       type: object
+      required:
+        - username
+        - password
       properties:
         username:
           type: string
+          minLength: 1
         password:
           type: string
+          minLength: 1
     CredentialsResponse:
       type: object
       properties:
@@ -1850,6 +1862,8 @@ components:
 
     UpsertSinglePermissionRequest:
       type: object
+      required:
+        - permission
       properties:
         permission:
           $ref: '#/components/schemas/MQTTSinglePermission'
@@ -1915,6 +1929,7 @@ components:
           type: string
         topic:
           type: string
+          minLength: 1
         publishAllowed:
           type: boolean
         subscribeAllowed:
