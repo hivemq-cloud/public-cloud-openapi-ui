@@ -1936,6 +1936,15 @@ components:
           type: boolean
         sharedGroup:
           type: string
+        roles:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              roleId:
+                type: "string"
+              roleName:
+                type: "string"
         applyTo:
           type: string
           enum:
