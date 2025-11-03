@@ -610,7 +610,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
       requestBody:
         required: true
         content:
@@ -633,7 +633,7 @@ paths:
           description: Role ID
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Successfully deleted
@@ -676,7 +676,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: List role permissions for the given cluster and role name.
@@ -703,12 +703,12 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
         - name: permissionId
           in: path
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Attached permission to role for the given cluster.
@@ -731,12 +731,12 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            type: integer
         - name: permissionId
           in: path
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: Detached permission from role for the given cluster.
@@ -792,7 +792,7 @@ paths:
           description: Role ID
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: role detached successfully.
@@ -821,7 +821,7 @@ paths:
           description: Role ID
           required: true
           schema:
-            type: string
+            type: integer
       responses:
         200:
           description: role attached successfully.
@@ -1587,189 +1587,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/MQTTPermissionResponse'
-    PermissionResp:
-      type: object
-      properties:
-        permissionInfo:
-          $ref: '#/components/schemas/Permission'
-    Permission:
-      type: object
-      description: a single MQTT permission, to be assigned to a role
-      required:
-        - name
-        - topic
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-          minLength: 1
-        description:
-          type: string
-        topic:
-          type: string
-        publishAllowed:
-          type: boolean
-        subscribeAllowed:
-          type: boolean
-        qos0Allowed:
-          type: boolean
-        qos1Allowed:
-          type: boolean
-        qos2Allowed:
-          type: boolean
-        retainedMsgsAllowed:
-          type: boolean
-        sharedSubAllowed:
-          type: boolean
-        sharedGroup:
-          type: string
-    KafkaStatusResponse:
-      type: object
-      properties:
-        kafkaStatus:
-          $ref: '#/components/schemas/KafkaStatus'
-    KafkaConfigResponse:
-      properties:
-        kafkaConfig:
-          $ref: '#/components/schemas/KafkaConfig'
-    SuccessResponseMessage:
-      properties:
-        success:
-          type: string
-        msg:
-          type: string
-    KafkaStatus:
-      type: object
-      properties:
-        message:
-          type: string
-        status:
-          type: string
-    KafkaConfig:
-      type: object
-      properties:
-        clusterId:
-          type: string
-        clientId:
-          type: string
-        bootstrapServers:
-          type: array
-          items:
-            type: string
-        provider:
-          $ref: '#/components/schemas/Provider'
-        kafkaAuthenticationSelected:
-          $ref: '#/components/schemas/KafkaAuthenticationSelected'
-        mqttToKafkaMapping:
-          $ref: '#/components/schemas/MqttToKafkaMapping'
-        KafkaToMqttMapping:
-          $ref: '#/components/schemas/KafkaToMqttMapping'
-        kafkaAuthenticationPlain:
-          $ref: '#/components/schemas/kafkaAuthenticationPlain'
-    Provider:
-      type: string
-      enum:
-        - Kafka
-        - ConfluentCloud
-        - Aiven
-    KafkaAuthenticationSelected:
-      type: string
-      enum:
-        - PLAIN
-        - SCRAM
-        - KERBEROS
-    kafkaAuthenticationPlain:
-      properties:
-        username:
-          type: string
-          example: "scooby"
-        password:
-          type: string
-          example: "doo"
-    MqttToKafkaMapping:
-      type: object
-      properties:
-        mqttTopicFilters:
-          type: array
-          items:
-            type: string
-        kafkaTopic:
-          type: array
-          items:
-            type: string
-        kafkaAcks:
-          $ref: '#/components/schemas/KafkaAcks'
-        kafkaMaxRequestSizeBytes:
-          type: integer
-          format: int64
-    KafkaToMqttMapping:
-      type: object
-      properties:
-        kafkaTopic:
-          type: array
-          items:
-            type: string
-        useSchemaRegistry:
-          $ref: '#/components/schemas/UseSchemaRegistry'
-        mqttTopics:
-          type: array
-          items:
-            type: string
-        mqttPayload:
-          $ref: '#/components/schemas/MqttPayload'
-        mqttPublishFields:
-          $ref: '#/components/schemas/MqttPublishFields'
-    KafkaAcks:
-      type: string
-      enum:
-        - ZERO
-        - ONE
-        - ACK
-    UseSchemaRegistry:
-      type: string
-      enum:
-        - none
-        - local
-        - confluent
-    MqttPayload:
-      type: string
-      enum:
-        - bytes
-        - other
-    PayloadFormatIndicator:
-      type: string
-      enum:
-        - UTF8
-        - UNSPECIFIED
-    Qos:
-      type: string
-      enum:
-        - atMostOnce
-        - atLeastOnce
-        - exactlyOnce
-    MqttPublishFields:
-      type: object
-      properties:
-        retainedFlag:
-          type: boolean
-        payloadFormatIndicator:
-          $ref: '#/components/schemas/PayloadFormatIndicator'
-        messageExpiryInterval:
-          type: integer
-          format: int64
-        responseTopic:
-          type: string
-        correlationData:
-          type: string
-        contentType:
-          type: string
-        qos:
-          $ref: '#/components/schemas/Qos'
-        userProperties:
-          type: object
-          additionalProperties:
-            type: string
     RolesListResponse:
       type: object
       properties:
@@ -2093,13 +1910,6 @@ components:
           items:
             $ref: '#/components/schemas/RolePermissionResponse'
     UserRolesListResponse:
-      type: object
-      properties:
-        roles:
-          type: array
-          items:
-            type: string
-    UserRoleResponse:
       type: object
       properties:
         roles:
