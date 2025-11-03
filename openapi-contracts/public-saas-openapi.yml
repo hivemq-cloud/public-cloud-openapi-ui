@@ -667,7 +667,7 @@ paths:
     get:
       tags:
         - MQTT Roles
-      summary: List all valid roles for MQTT users in a selected cluster by role name.
+      summary: List all permissions assigned to a specific role.
       operationId: listMqttPermissionsByRole
       parameters:
         - $ref: '#/components/parameters/orgId'
