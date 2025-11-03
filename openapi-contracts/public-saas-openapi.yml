@@ -1526,6 +1526,7 @@ components:
         type: string
         minLength: 6
         maxLength: 6
+        pattern: '^[a-zA-Z0-9]{6}$'
     clusterId:
       name: clusterId
       in: path
@@ -1534,6 +1535,7 @@ components:
       schema:
         type: string
         format: uuid
+        pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
   schemas:
     UpsertPermissionListRequest:
       type: object
