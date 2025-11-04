@@ -691,23 +691,41 @@ paths:
         422:
           description: If the cluster is not running return a unprocessable entity
             response.
-  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}/permissions:
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleIdOrName}/permissions:
     get:
       tags:
         - MQTT Roles
-      summary: List all permissions assigned to a specific role.
+      summary: List all permissions for a specific role by role ID or role name
+      description: |
+        Retrieves all permissions assigned to a role. The `roleIdOrName` parameter accepts either:
+        - **Numeric value** (e.g., `123`): Interpreted as a role ID. The system looks up the role by its numeric identifier.
+        - **Text value** (e.g., `admin`, `read-only`): Interpreted as a role name. The system looks up the role by its unique name.
+
+        **Lookup behavior:**
+        - If a numeric ID is provided and the role exists, permissions are returned immediately.
+        - If a numeric ID is provided but the role is not found, the system attempts to find a role with that exact value as its name (edge case for numeric role names).
+        - If a text name is provided, the system looks up the role by name.
+        - Returns 404 if the role is not found by either ID or name.
       operationId: listMqttPermissionsByRole
       parameters:
         - $ref: '#/components/parameters/orgId'
         - $ref: '#/components/parameters/clusterId'
-        - name: roleId
+        - name: roleIdOrName
           in: path
+          description: Role ID (numeric) or role name (text). Examples - numeric ID `123`, text name `admin` or `read-only`
           required: true
           schema:
-            type: integer
+            type: string
+          examples:
+            numericId:
+              value: "123"
+              summary: Lookup by role ID
+            textName:
+              value: "admin"
+              summary: Lookup by role name
       responses:
         200:
-          description: List role permissions for the given cluster and role name.
+          description: Successfully retrieved permissions for the specified role
           content:
             application/json:
               schema:
@@ -1685,8 +1703,22 @@ components:
           type: string
         role:
           type: array
+          description: "Deprecated: Use roleRefs instead. Contains only role names without IDs."
+          deprecated: true
           items:
             type: string
+        roleRefs:
+          type: array
+          description: "Role references containing both role ID and role name. Recommended over deprecated 'role' field."
+          items:
+            type: object
+            properties:
+              roleId:
+                type: string
+                description: "The numeric role identifier (serialized as string)"
+              roleName:
+                type: string
+                description: "The role name"
     Credentials:
       type: object
       required:
@@ -1904,8 +1936,26 @@ components:
       properties:
         roles:
           type: array
+          description: "Deprecated: Use roleRefs instead. Contains only role names without IDs."
+          deprecated: true
           items:
             type: string
+        roleRefs:
+          type: array
+          description: "Role references containing both role ID and role name. This is a read-only field populated by the server."
+          readOnly: true
+          items:
+            $ref: '#/components/schemas/RoleRef'
+    RoleRef:
+      type: object
+      description: Role reference containing both role ID and name
+      properties:
+        roleId:
+          type: string
+          description: The numeric role identifier (serialized as string for JavaScript compatibility)
+        roleName:
+          type: string
+          description: The role name
     Error:
       type: object
       properties:
