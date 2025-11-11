@@ -641,7 +641,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MQTTRole"
+              $ref: "#/components/schemas/PatchRoleRequest"
       responses:
         204:
           description: successfully updated
@@ -1900,6 +1900,23 @@ components:
           type: string
         description:
           type: string
+        permissions:
+          description: list of permission IDs mapped to the role. see MQTTPermission
+          type: array
+          items:
+            type: integer
+    PatchRoleRequest:
+      type: object
+      description: Request body for updating an existing MQTT role
+      properties:
+        role:
+          type: object
+          description: Role details to update (name and/or description)
+          properties:
+            name:
+              type: string
+            description:
+              type: string
         permissions:
           description: list of permission IDs mapped to the role. see MQTTPermission
           type: array
