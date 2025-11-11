@@ -99,19 +99,19 @@ paths:
         - ID (string, primary key): The MQTT client identifier.
         - CONNECTED (boolean): Whether the client is currently connected.
         - CONNECTED_NODE (string): The node the client is connected to.
-        - IP_ADDRESS (string): The client's IP address.
-        - USER_NAME (string): The username used by the client.
+        - IP_ADDRESS (string): The IP address of the client.
+        - USER_NAME (string): The username the client uses.
         - MAX_QUEUE_SIZE (number): The maximum queue size for the client.
         - CURRENT_QUEUE_SIZE (number): The current queue size for the client.
         - TIMESTAMP (number): The timestamp of the last session update.
 
         Filter types:
-        - Boolean filters: `type:value` (e.g., CONNECTED:true)
-        - String filters: `type:operation:value` (e.g., ID:EQ:client1, USER_NAME:NOT_EQ:admin)
-        - Number filters: `type:operation:value` (e.g., MAX_QUEUE_SIZE:GT:100, TIMESTAMP:LTE:1700000000)
+        - Boolean filters: `type:value` (for example, CONNECTED:true)
+        - String filters: `type:operation:value` (for example, ID:EQ:client1, USER_NAME:NOT_EQ:admin)
+        - Number filters: `type:operation:value` (for example, MAX_QUEUE_SIZE:GT:100, TIMESTAMP:LTE:1700000000)
 
-        Supported operations for string filters: EQ (equals), NOT_EQ (not equals), CONTAINS (contains), STARTS_WITH (starts with), ENDS_WITH (ends with), REGEX (regular expression).
-        Supported operations for number filters: EQ (equals), NOT_EQ (not equals), GT (greater than), GTE (greater or equal), LT (less than), LTE (less or equal).
+        Supported operations for string filters: EQ (equal to), NOT_EQ (not equal to), CONTAINS (contains), STARTS_WITH (starts with), ENDS_WITH (ends with), REGEX (regular expression).
+        Supported operations for number filters: EQ (equal to), NOT_EQ (not equal to), GT (greater than), GTE (greater than or equal to), LT (less than), LTE (less than or equal to).
 
         Examples:
         - Single boolean filter: CONNECTED:true
@@ -125,7 +125,7 @@ paths:
         - /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search?number-filter=MAX_QUEUE_SIZE:GT:100
         - /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search?string-filter=ID:EQ:client1&boolean-filter=CONNECTED:true&string-filter=IP_ADDRESS:NOT_EQ:127.0.0.1&number-filter=MAX_QUEUE_SIZE:LTE:500
 
-        This endpoint requires at least HiveMQ version 4.42.0. on all cluster nodes.
+        This endpoint requires HiveMQ version 4.42.0. or higher on all cluster nodes.
       operationId: searchMqttClientsGet
       parameters:
         - $ref: '#/components/parameters/orgId'
@@ -151,8 +151,8 @@ paths:
             type: array
             items:
               type: string
-        - description: Specifies the page size for the returned results. Has to be between
-            50 and 2500. Default page size is 500.
+        - description: Specifies the page size for the returned results. The value must be between
+            50 and 2500. The default page size is 500.
           in: query
           name: limit
           schema:
@@ -304,13 +304,13 @@ paths:
         - Metrics
       summary: Get Broker Metrics
       operationId: brokerOtelMetrics
-      description: This API allows you to access various performance and operational metrics for the MQTT broker. These metrics help you monitor the health and activity of your HiveMQ Cloud broker, providing insights into client connections, message delivery, and overall system performance.
+      description: This API provides performance and operational metrics for your HiveMQ Cloud broker. These metrics offer insights into client activity, message delivery, and overall system health.
       parameters:
         - $ref: '#/components/parameters/orgId'
         - $ref: '#/components/parameters/clusterId'
       responses:
         200:
-          description: The response contains a variety of metrics categorized into key areas such as client connections, message delivery, and subscriptions. Each metric offers insights into specific aspects of the broker's operation to help you effectively monitor, manage, and optimize your IoT infrastructure.
+          description: The response includes metrics grouped into key categories such as client connections, message delivery, and subscriptions. Each metric provides insight into broker operations and supports effective monitoring, management, and optimization of your IoT infrastructure.
           content:
             text/plain:
               schema:
@@ -344,8 +344,7 @@ paths:
       description: |-
         Lists all MQTT credentials for the specified cluster.
 
-        This endpoint uses cursor-based pagination.
-        The results are not sorted in any way, no ordering of any kind is guaranteed.
+        This endpoint uses cursor-based pagination and does not guarantee any specific result order.
       operationId: listMqttCredentials
       parameters:
         - $ref: '#/components/parameters/orgId'
@@ -359,7 +358,7 @@ paths:
             format: int32
             minimum: 50
             maximum: 2500
-        - description: The cursor that has been returned by the previous result page.
+        - description: The cursor that the previous result page has returned.
             Do not pass this parameter if you want to fetch the first page.
           in: query
           name: cursor
@@ -385,7 +384,7 @@ paths:
                 $ref: '#/components/schemas/Errors'
           description: Cursor not valid anymore
         404:
-          description: Org or cluster not found
+          description: Organization or cluster not found
     post:
       tags:
         - MQTT Credentials
@@ -475,11 +474,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/MQTTPermissionListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
     post:
       tags:
         - MQTT Permissions
@@ -595,11 +593,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/RolesListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
     post:
       tags:
         - MQTT Roles
@@ -686,11 +683,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/RolePermissionsListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleIdOrName}/permissions:
     get:
       tags:
@@ -698,14 +694,14 @@ paths:
       summary: List all permissions for a specific role by role ID or role name
       description: |
         Retrieves all permissions assigned to a role. The `roleIdOrName` parameter accepts either:
-        - **Numeric value** (e.g., `123`): Interpreted as a role ID. The system looks up the role by its numeric identifier.
-        - **Text value** (e.g., `admin`, `read-only`): Interpreted as a role name. The system looks up the role by its unique name.
+        - **Numeric value** (for example, `123`): Interpreted as a role ID. The system looks up the role by its numeric identifier.
+        - **Text value** (for example, `admin` or `read-only`): Interpreted as a role name. The system looks up the role by its unique name.
 
         **Lookup behavior:**
         - If a numeric ID is provided and the role exists, permissions are returned immediately.
         - If a numeric ID is provided but the role is not found, the system attempts to find a role with that exact value as its name (edge case for numeric role names).
         - If a text name is provided, the system looks up the role by name.
-        - Returns 404 if the role is not found by either ID or name.
+        - If the role is not found by ID or name, a 404 error is returned.
       operationId: listMqttPermissionsByRole
       parameters:
         - $ref: '#/components/parameters/orgId'
@@ -731,11 +727,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/MqttRolePermissionsByRoleResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}/permissions/{permissionId}/attach:
     put:
       tags:
@@ -759,11 +754,10 @@ paths:
         200:
           description: Attached permission to role for the given cluster.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}/permissions/{permissionId}/detach:
     put:
       tags:
@@ -787,11 +781,10 @@ paths:
         200:
           description: Detached permission from role for the given cluster.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles:
     get:
       tags:
@@ -814,11 +807,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserRolesListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleId}/detach:
     put:
       tags:
@@ -843,11 +835,10 @@ paths:
         200:
           description: role detached successfully.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleId}/attach:
     put:
       tags:
@@ -872,11 +863,10 @@ paths:
         200:
           description: role attached successfully.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/clients:
     get:
       description: |-
@@ -1677,7 +1667,7 @@ components:
           $ref: '#/components/schemas/PaginationCursor'
         items:
           type: array
-          description: List of credentials returned by this endpoint
+          description: List of credentials this endpoint returns
           items:
             $ref: '#/components/schemas/UserInfo'
     CredentialsListResponse:
@@ -1703,7 +1693,7 @@ components:
           type: string
         role:
           type: array
-          description: "Deprecated: Use roleRefs instead. Contains only role names without IDs."
+          description: "Deprecated. Use `roleRefs` instead. Contains only role names without IDs."
           deprecated: true
           items:
             type: string
@@ -1936,13 +1926,13 @@ components:
       properties:
         roles:
           type: array
-          description: "Deprecated: Use roleRefs instead. Contains only role names without IDs."
+          description: "Deprecated. Use `roleRefs` instead. Contains only role names without IDs."
           deprecated: true
           items:
             type: string
         roleRefs:
           type: array
-          description: "Role references containing both role ID and role name. This is a read-only field populated by the server."
+          description: "Role references containing both role ID and role name. This is a read-only field the server populates."
           readOnly: true
           items:
             $ref: '#/components/schemas/RoleRef'
@@ -1952,7 +1942,7 @@ components:
       properties:
         roleId:
           type: string
-          description: The numeric role identifier (serialized as string for JavaScript compatibility)
+          description: The numeric role identifier (serialized as a string for JavaScript compatibility)
         roleName:
           type: string
           description: The role name
@@ -2401,12 +2391,12 @@ components:
           $ref: "#/components/schemas/PaginationCursor"
         items:
           type: array
-          description: List of result items that are returned by this endpoint
+          description: List of result items this endpoint returns
           items:
             $ref: "#/components/schemas/ClientAsSearchResult"
     ClientAsSearchResult:
       type: object
-      description: List of result items that are returned by this endpoint
+      description: List of result items this endpoint returns
       properties:
         connected:
           type: boolean

@@ -71,19 +71,20 @@ paths:
         - ID (string, primary key): The MQTT client identifier.
         - CONNECTED (boolean): Whether the client is currently connected.
         - CONNECTED_NODE (string): The node the client is connected to.
-        - IP_ADDRESS (string): The client's IP address.
-        - USER_NAME (string): The username used by the client.
+        - IP_ADDRESS (string): The IP address of the client.
+        - USER_NAME (string): The username the client uses.
         - MAX_QUEUE_SIZE (number): The maximum queue size for the client.
         - CURRENT_QUEUE_SIZE (number): The current queue size for the client.
         - TIMESTAMP (number): The timestamp of the last session update.
 
         Filter types:
-        - Boolean filters: `type:value` (e.g., CONNECTED:true)
-        - String filters: `type:operation:value` (e.g., ID:EQ:client1, USER_NAME:NOT_EQ:admin)
-        - Number filters: `type:operation:value` (e.g., MAX_QUEUE_SIZE:GT:100, TIMESTAMP:LTE:1700000000)
+        - Boolean filters: `type:value` (for example, CONNECTED:true)
+        - String filters: `type:operation:value` (for example, ID:EQ:client1, USER_NAME:NOT_EQ:admin)
+        - Number filters: `type:operation:value` (for example, MAX_QUEUE_SIZE:GT:100, TIMESTAMP:LTE:1700000000)
 
-        Supported operations for string filters: EQ (equals), NOT_EQ (not equals), CONTAINS (contains), STARTS_WITH (starts with), ENDS_WITH (ends with), REGEX (regular expression).
-        Supported operations for number filters: EQ (equals), NOT_EQ (not equals), GT (greater than), GTE (greater or equal), LT (less than), LTE (less or equal).
+        Supported operations for string filters: EQ (equal to), NOT_EQ (not equal to), CONTAINS (contains), STARTS_WITH (starts with), ENDS_WITH (ends with), REGEX (regular expression).
+        Supported operations for number filters: EQ (equal to), NOT_EQ (not equal to), GT (greater than), GTE (greater than or equal to), LT (less than), LTE (less than or equal to).
+
 
         Examples:
         - Single boolean filter: CONNECTED:true
@@ -123,8 +124,8 @@ paths:
             type: array
             items:
               type: string
-        - description: Specifies the page size for the returned results. Has to be between
-            50 and 2500. Default page size is 500.
+        - description: Specifies the page size for the returned results. The value must be between
+            50 and 2500. The default page size is 500.
           in: query
           name: limit
           schema:
@@ -322,8 +323,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/orgId'
         - $ref: '#/components/parameters/clusterId'
-        - description: Specifies the page size for the returned results. Has to be between
-            50 and 2500. Default page size is 500.
+        - description: Specifies the page size for the returned results. The value must be between
+            50 and 2500. The default page size is 500.
           in: query
           name: limit
           schema:
@@ -357,7 +358,7 @@ paths:
                 $ref: '#/components/schemas/Errors'
           description: Cursor not valid anymore
         404:
-          description: Org or cluster not found
+          description: Organization or cluster not found
     post:
       tags:
         - MQTT Credentials
@@ -447,11 +448,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/MQTTPermissionListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
     post:
       tags:
         - MQTT Permissions
@@ -567,11 +567,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/RolesListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
     post:
       tags:
         - MQTT Roles
@@ -658,11 +657,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/RolePermissionsListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleIdOrName}/permissions:
     get:
       tags:
@@ -703,11 +701,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/MqttRolePermissionsByRoleResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}/permissions/{permissionId}/attach:
     put:
       tags:
@@ -731,11 +728,10 @@ paths:
         200:
           description: Attached permission to role for the given cluster.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/roles/{roleId}/permissions/{permissionId}/detach:
     put:
       tags:
@@ -759,11 +755,10 @@ paths:
         200:
           description: Detached permission from role for the given cluster.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles:
     get:
       tags:
@@ -786,11 +781,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/UserRolesListResponse'
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleId}/detach:
     put:
       tags:
@@ -815,11 +809,10 @@ paths:
         200:
           description: role detached successfully.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/user/{username}/roles/{roleId}/attach:
     put:
       tags:
@@ -844,11 +837,10 @@ paths:
         200:
           description: role attached successfully.
         404:
-          description: If no cluster is found for the current user return a not found
-            response.
+          description: Cluster not found. The specified cluster does not exist, or the current user does not have
+            permission to access it.
         422:
-          description: If the cluster is not running return a unprocessable entity
-            response.
+          description: Cluster is not running.
   /api/v2/orgs/{orgId}/clusters/{clusterId}/mqtt/clients:
     get:
       description: |-
@@ -862,8 +854,8 @@ paths:
         This endpoint requires at least HiveMQ version 4.4.0. on all cluster nodes.
       operationId: getAllMqttClients
       parameters:
-        - description: Specifies the page size for the returned results. Has to be between
-            50 and 2500. Default page size is 500.
+        - description: Specifies the page size for the returned results. The value must be between
+            50 and 2500. The default page size is 500.
           in: query
           name: limit
           schema:
