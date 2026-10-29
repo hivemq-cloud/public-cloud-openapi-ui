@@ -88,6 +88,8 @@ tags:
     description: clients authentication
   - name: Cluster Configuration
     description: Cluster Configuration
+  - name: Data Hub
+    description: Manage Data Hub schemas, policies and scripts
 
 paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search:
@@ -1544,6 +1546,365 @@ paths:
           description: Forbidden action
         404:
           description: clusterId not found
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/schemas:
+    get:
+      tags:
+        - Data Hub
+      summary: List Data Hub schemas
+      description: Lists the Data Hub schemas of the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: listDataHubSchemas
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubFields'
+        - name: types
+          in: query
+          description: Comma-separated list of schema types to filter by.
+          schema:
+            type: string
+        - name: schemaIds
+          in: query
+          description: Comma-separated list of schema ids to filter by.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/dataHubLimit'
+        - $ref: '#/components/parameters/dataHubCursor'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+    post:
+      tags:
+        - Data Hub
+      summary: Create a Data Hub schema
+      description: Creates a Data Hub schema on the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: createDataHubSchema
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '201':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '409':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/schemas/{schemaId}:
+    get:
+      tags:
+        - Data Hub
+      summary: Get a Data Hub schema
+      description: Returns the latest version of a Data Hub schema. Proxied to the broker's Data Hub REST API.
+      operationId: getDataHubSchema
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubSchemaId'
+        - $ref: '#/components/parameters/dataHubFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+    delete:
+      tags:
+        - Data Hub
+      summary: Delete a Data Hub schema
+      description: Deletes all versions of a Data Hub schema. Proxied to the broker's Data Hub REST API.
+      operationId: deleteDataHubSchema
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubSchemaId'
+      responses:
+        '204':
+          description: Schema deleted
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/data-validation/policies:
+    get:
+      tags:
+        - Data Hub
+      summary: List Data Hub data policies
+      description: Lists the Data Hub data policies of the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: listDataHubDataPolicies
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubFields'
+        - name: policyIds
+          in: query
+          description: Comma-separated list of policy ids to filter by.
+          schema:
+            type: string
+        - name: schemaIds
+          in: query
+          description: Comma-separated list of schema ids to filter by.
+          schema:
+            type: string
+        - name: topic
+          in: query
+          description: MQTT topic to filter by.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/dataHubLimit'
+        - $ref: '#/components/parameters/dataHubCursor'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+    post:
+      tags:
+        - Data Hub
+      summary: Create a Data Hub data policy
+      description: Creates a Data Hub data policy on the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: createDataHubDataPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '201':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '409':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/data-validation/policies/{policyId}:
+    get:
+      tags:
+        - Data Hub
+      summary: Get a Data Hub data policy
+      description: Returns a Data Hub data policy. Proxied to the broker's Data Hub REST API.
+      operationId: getDataHubDataPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubPolicyId'
+        - $ref: '#/components/parameters/dataHubFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+    put:
+      tags:
+        - Data Hub
+      summary: Update a Data Hub data policy
+      description: Replaces a Data Hub data policy. Proxied to the broker's Data Hub REST API.
+      operationId: updateDataHubDataPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubPolicyId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+    delete:
+      tags:
+        - Data Hub
+      summary: Delete a Data Hub data policy
+      description: Deletes a Data Hub data policy. Proxied to the broker's Data Hub REST API.
+      operationId: deleteDataHubDataPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubPolicyId'
+      responses:
+        '204':
+          description: Policy deleted
+        '404':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/behavior-validation/policies:
+    get:
+      tags:
+        - Data Hub
+      summary: List Data Hub behavior policies
+      description: Lists the Data Hub behavior policies of the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: listDataHubBehaviorPolicies
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubFields'
+        - name: policyIds
+          in: query
+          description: Comma-separated list of policy ids to filter by.
+          schema:
+            type: string
+        - name: clientIds
+          in: query
+          description: Comma-separated list of MQTT client ids to filter by.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/dataHubLimit'
+        - $ref: '#/components/parameters/dataHubCursor'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+    post:
+      tags:
+        - Data Hub
+      summary: Create a Data Hub behavior policy
+      description: Creates a Data Hub behavior policy on the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: createDataHubBehaviorPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '201':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '409':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/behavior-validation/policies/{policyId}:
+    get:
+      tags:
+        - Data Hub
+      summary: Get a Data Hub behavior policy
+      description: Returns a Data Hub behavior policy. Proxied to the broker's Data Hub REST API.
+      operationId: getDataHubBehaviorPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubPolicyId'
+        - $ref: '#/components/parameters/dataHubFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+    put:
+      tags:
+        - Data Hub
+      summary: Update a Data Hub behavior policy
+      description: Replaces a Data Hub behavior policy. Proxied to the broker's Data Hub REST API.
+      operationId: updateDataHubBehaviorPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubPolicyId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+    delete:
+      tags:
+        - Data Hub
+      summary: Delete a Data Hub behavior policy
+      description: Deletes a Data Hub behavior policy. Proxied to the broker's Data Hub REST API.
+      operationId: deleteDataHubBehaviorPolicy
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubPolicyId'
+      responses:
+        '204':
+          description: Policy deleted
+        '404':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/scripts:
+    get:
+      tags:
+        - Data Hub
+      summary: List Data Hub scripts
+      description: Lists the Data Hub scripts of the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: listDataHubScripts
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubFields'
+        - name: functionTypes
+          in: query
+          description: Comma-separated list of function types to filter by.
+          schema:
+            type: string
+        - name: scriptIds
+          in: query
+          description: Comma-separated list of script ids to filter by.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/dataHubLimit'
+        - $ref: '#/components/parameters/dataHubCursor'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+    post:
+      tags:
+        - Data Hub
+      summary: Create a Data Hub script
+      description: Creates a Data Hub script on the cluster. Proxied to the broker's Data Hub REST API.
+      operationId: createDataHubScript
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '201':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '409':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/scripts/{scriptId}:
+    get:
+      tags:
+        - Data Hub
+      summary: Get a Data Hub script
+      description: Returns the latest version of a Data Hub script. Proxied to the broker's Data Hub REST API.
+      operationId: getDataHubScript
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubScriptId'
+        - $ref: '#/components/parameters/dataHubFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+    delete:
+      tags:
+        - Data Hub
+      summary: Delete a Data Hub script
+      description: Deletes all versions of a Data Hub script. Proxied to the broker's Data Hub REST API.
+      operationId: deleteDataHubScript
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubScriptId'
+      responses:
+        '204':
+          description: Script deleted
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '404':
+          $ref: '#/components/responses/DataHubError'
 security:
   - bearerAuth: [ ]
 components:
@@ -1572,7 +1933,71 @@ components:
         type: string
         format: uuid
         pattern: '^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$'
+    dataHubSchemaId:
+      name: schemaId
+      in: path
+      description: The identifier of the Data Hub schema.
+      required: true
+      schema:
+        type: string
+    dataHubPolicyId:
+      name: policyId
+      in: path
+      description: The identifier of the Data Hub policy.
+      required: true
+      schema:
+        type: string
+    dataHubScriptId:
+      name: scriptId
+      in: path
+      description: The identifier of the Data Hub script.
+      required: true
+      schema:
+        type: string
+    dataHubFields:
+      name: fields
+      in: query
+      description: Comma-separated list of fields to include in the response.
+      schema:
+        type: string
+    dataHubLimit:
+      name: limit
+      in: query
+      description: Maximum number of entries per page.
+      schema:
+        type: integer
+    dataHubCursor:
+      name: cursor
+      in: query
+      description: Cursor of the page to return, taken from the `_links.next` of the previous page.
+      schema:
+        type: string
+  requestBodies:
+    DataHubResource:
+      description: The Data Hub resource, in the format the HiveMQ broker's Data Hub REST API expects.
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DataHubResource'
+  responses:
+    DataHubResource:
+      description: The Data Hub resource or page of resources, as returned by the HiveMQ broker's Data Hub REST API.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/DataHubResource'
+    DataHubError:
+      description: Error returned by the HiveMQ broker's Data Hub REST API.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Errors'
   schemas:
+    DataHubResource:
+      type: object
+      additionalProperties: true
+      description: A Data Hub schema, policy or script, or a page of them. See the HiveMQ Data Hub REST API documentation for the exact format.
     UpsertPermissionListRequest:
       type: object
       properties:
