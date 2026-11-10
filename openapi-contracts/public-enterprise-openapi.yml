@@ -89,7 +89,7 @@ tags:
   - name: Cluster Configuration
     description: Cluster Configuration
   - name: Data Hub
-    description: Manage Data Hub schemas, policies and scripts
+    description: Manage Data Hub schemas, policies, scripts and module instances, and read client states
 
 paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search:
@@ -1574,6 +1574,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
     post:
       tags:
         - Data Hub
@@ -1590,6 +1592,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '409':
           $ref: '#/components/responses/DataHubError'
   /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/schemas/{schemaId}:
@@ -1607,6 +1611,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DataHubResource'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
     delete:
@@ -1624,6 +1630,8 @@ paths:
           description: Schema deleted
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
   /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/data-validation/policies:
@@ -1659,6 +1667,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
     post:
       tags:
         - Data Hub
@@ -1675,6 +1685,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '409':
           $ref: '#/components/responses/DataHubError'
   /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/data-validation/policies/{policyId}:
@@ -1692,6 +1704,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DataHubResource'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
     put:
@@ -1711,6 +1725,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
     delete:
@@ -1726,6 +1742,8 @@ paths:
       responses:
         '204':
           description: Policy deleted
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
   /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/behavior-validation/policies:
@@ -1756,6 +1774,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
     post:
       tags:
         - Data Hub
@@ -1772,6 +1792,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '409':
           $ref: '#/components/responses/DataHubError'
   /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/behavior-validation/policies/{policyId}:
@@ -1789,6 +1811,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DataHubResource'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
     put:
@@ -1808,6 +1832,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
     delete:
@@ -1823,6 +1849,8 @@ paths:
       responses:
         '204':
           description: Policy deleted
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
   /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/scripts:
@@ -1853,6 +1881,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
     post:
       tags:
         - Data Hub
@@ -1869,6 +1899,8 @@ paths:
           $ref: '#/components/responses/DataHubResource'
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '409':
           $ref: '#/components/responses/DataHubError'
   /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/scripts/{scriptId}:
@@ -1886,6 +1918,8 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/DataHubResource'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
           $ref: '#/components/responses/DataHubError'
     delete:
@@ -1903,7 +1937,173 @@ paths:
           description: Script deleted
         '400':
           $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
         '404':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/modules/instances:
+    get:
+      tags:
+        - Data Hub
+      summary: List Data Hub module instances
+      description: Lists the Data Hub module instances of the cluster. Proxied to the broker's Data Hub REST API. Requires HiveMQ 4.36 or later on the cluster.
+      operationId: listDataHubModuleInstances
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubFields'
+        - name: instanceIds
+          in: query
+          description: Comma-separated list of module instance ids to filter by.
+          schema:
+            type: string
+        - name: moduleNames
+          in: query
+          description: Comma-separated list of module names to filter by.
+          schema:
+            type: string
+        - $ref: '#/components/parameters/dataHubLimit'
+        - $ref: '#/components/parameters/dataHubCursor'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
+        '503':
+          $ref: '#/components/responses/DataHubError'
+    post:
+      tags:
+        - Data Hub
+      summary: Create a Data Hub module instance
+      description: Creates a Data Hub module instance on the cluster. Proxied to the broker's Data Hub REST API. Requires HiveMQ 4.36 or later on the cluster.
+      operationId: createDataHubModuleInstance
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '201':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
+        '503':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/modules/instances/{instanceId}:
+    get:
+      tags:
+        - Data Hub
+      summary: Get a Data Hub module instance
+      description: Returns a Data Hub module instance. Proxied to the broker's Data Hub REST API. Requires HiveMQ 4.36 or later on the cluster.
+      operationId: getDataHubModuleInstance
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubInstanceId'
+        - $ref: '#/components/parameters/dataHubFields'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+        '503':
+          $ref: '#/components/responses/DataHubError'
+    put:
+      tags:
+        - Data Hub
+      summary: Update a Data Hub module instance
+      description: Replaces the configuration of a Data Hub module instance. Proxied to the broker's Data Hub REST API. Requires HiveMQ 4.36 or later on the cluster.
+      operationId: updateDataHubModuleInstance
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubInstanceId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+        '412':
+          $ref: '#/components/responses/DataHubError'
+        '503':
+          $ref: '#/components/responses/DataHubError'
+    patch:
+      tags:
+        - Data Hub
+      summary: Enable or disable a Data Hub module instance
+      description: Enables or disables a Data Hub module instance. Proxied to the broker's Data Hub REST API. Requires HiveMQ 4.36 or later on the cluster.
+      operationId: enableDataHubModuleInstance
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubInstanceId'
+      requestBody:
+        $ref: '#/components/requestBodies/DataHubResource'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+        '503':
+          $ref: '#/components/responses/DataHubError'
+    delete:
+      tags:
+        - Data Hub
+      summary: Delete a Data Hub module instance
+      description: Deletes a Data Hub module instance. Proxied to the broker's Data Hub REST API. Requires HiveMQ 4.36 or later on the cluster.
+      operationId: deleteDataHubModuleInstance
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubInstanceId'
+      responses:
+        '204':
+          description: Module instance deleted
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+        '503':
+          $ref: '#/components/responses/DataHubError'
+  /api/v2/orgs/{orgId}/clusters/{clusterId}/data-hub/behavior-validation/states/{clientId}:
+    get:
+      tags:
+        - Data Hub
+      summary: Get the Data Hub state of a client
+      description: Returns the behavior policy state of a connected MQTT client. Proxied to the broker's Data Hub REST API.
+      operationId: getDataHubClientState
+      parameters:
+        - $ref: '#/components/parameters/orgId'
+        - $ref: '#/components/parameters/clusterId'
+        - $ref: '#/components/parameters/dataHubClientId'
+      responses:
+        '200':
+          $ref: '#/components/responses/DataHubResource'
+        '400':
+          $ref: '#/components/responses/DataHubError'
+        '403':
+          $ref: '#/components/responses/DataHubNotEnabled'
+        '404':
+          $ref: '#/components/responses/DataHubError'
+        '503':
           $ref: '#/components/responses/DataHubError'
 security:
   - bearerAuth: [ ]
@@ -1954,6 +2154,20 @@ components:
       required: true
       schema:
         type: string
+    dataHubInstanceId:
+      name: instanceId
+      in: path
+      description: The identifier of the Data Hub module instance.
+      required: true
+      schema:
+        type: string
+    dataHubClientId:
+      name: clientId
+      in: path
+      description: The MQTT client identifier.
+      required: true
+      schema:
+        type: string
     dataHubFields:
       name: fields
       in: query
@@ -1987,6 +2201,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/DataHubResource'
+    DataHubNotEnabled:
+      description: The Data Hub API is not enabled for the organization. Open a support case at https://app.hivemq.com/get-help to request access.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
     DataHubError:
       description: Error returned by the HiveMQ broker's Data Hub REST API.
       content:
@@ -1997,7 +2220,7 @@ components:
     DataHubResource:
       type: object
       additionalProperties: true
-      description: A Data Hub schema, policy or script, or a page of them. See the HiveMQ Data Hub REST API documentation for the exact format.
+      description: A Data Hub schema, policy, script, module instance or client state, or a page of them. See the HiveMQ Data Hub REST API documentation for the exact format.
     UpsertPermissionListRequest:
       type: object
       properties:
