@@ -89,7 +89,11 @@ tags:
   - name: Cluster Configuration
     description: Cluster Configuration
   - name: Data Hub
-    description: Manage Data Hub schemas, policies, scripts and module instances, and read client states
+    description: >-
+      Manage Data Hub schemas, policies, scripts and module instances, and read client states.
+      The Data Hub API is available to eligible customers only and must be enabled for the organization.
+      Calls from an organization without access return 403. Open a support case at
+      https://app.hivemq.com/get-help to request access.
 
 paths:
   /api/v2/orgs/{orgId}/clusters/{clusterId}/a/mqtt/clients/search:
